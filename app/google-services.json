@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "438218325257",
+    "project_id": "productivife",
+    "storage_bucket": "productivife.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438218325257:android:72127b9752ca03d852e7d8",
+        "android_client_info": {
+          "package_name": "com.daniela.productivife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "438218325257-d2kl9h28b23lfklsr27bem0d69euaf8m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.daniela.productivife",
+            "certificate_hash": "1d195b9561af88f627f06b124d8953080f2a2fd7"
+          }
+        },
+        {
+          "client_id": "438218325257-qms6kukba3i3epegfqi1mhgn1tpr2vue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDy__oA2TPcmqI4jKwgKQjQUKsra8Jsrgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438218325257-qms6kukba3i3epegfqi1mhgn1tpr2vue.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

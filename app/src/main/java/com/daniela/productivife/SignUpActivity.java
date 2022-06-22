@@ -1,7 +1,6 @@
 package com.daniela.productivife;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -23,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-public class SignUp extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity {
     private Button btnLogin;
     private Button btnSignup;
     private EditText etName;
@@ -52,7 +51,7 @@ public class SignUp extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        progressDialog = new ProgressDialog(SignUp.this);
+        progressDialog = new ProgressDialog(SignUpActivity.this);
         progressDialog.setTitle("Wait a second please");
         progressDialog.setCanceledOnTouchOutside(false); //User can't close de process dialog when pressing
 
@@ -65,11 +64,10 @@ public class SignUp extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignUp.this, Login.class));
+                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             }
         });
     }
-
     private void checkData(){
         name = etName.getText().toString();
         email = etEmail.getText().toString();
@@ -111,7 +109,7 @@ public class SignUp extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(SignUp.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -137,15 +135,15 @@ public class SignUp extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
-                        Toast.makeText(SignUp.this, "Account successfully created", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(SignUp.this, ToDoMenu.class));
+                        Toast.makeText(SignUpActivity.this, "Account successfully created", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                         finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(SignUp.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

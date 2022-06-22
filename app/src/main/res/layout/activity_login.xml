@@ -60,7 +60,7 @@
 
 
         <EditText
-            android:id="@+id/etEmail"
+            android:id="@+id/etEmailLogin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -80,7 +80,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSignup" />
         <EditText
-            android:id="@+id/etPassword"
+            android:id="@+id/etPasswordLogin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -98,7 +98,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etEmail"
+            app:layout_constraintTop_toBottomOf="@+id/etEmailLogin"
             app:passwordToggleEnabled="true"
             />
 
@@ -124,7 +124,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+            app:layout_constraintTop_toBottomOf="@+id/etPasswordLogin" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

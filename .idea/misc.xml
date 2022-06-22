@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_email.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/ic_lock.xml" value="0.2365" />
+        <entry key="app/src/main/res/drawable/ic_logout.xml" value="0.7055" />
         <entry key="app/src/main/res/drawable/ic_person.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/ic_person_24.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/ic_username.xml" value="0.2365" />
@@ -15,6 +16,7 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.2463768115942029" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4630192502532928" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.48890075683593737" />
+        <entry key="app/src/main/res/menu/menu_main.xml" value="0.9364102564102564" />
       </map>
     </option>
   </component>

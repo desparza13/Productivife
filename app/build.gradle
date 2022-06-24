@@ -45,6 +45,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:20.0.5'
     //Material
     implementation 'com.google.android.material:material:1.4.0'
+    //Facebook login
+    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+
 
 }
 apply plugin: 'com.android.application'

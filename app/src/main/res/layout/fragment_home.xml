@@ -40,26 +40,64 @@
                         android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
+
                     <TextView
                         android:id="@+id/tvUserName"
-                        android:text="@string/userName"
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#ffff"
+                        android:drawableStart="@drawable/ic_person_white"
+                        android:drawablePadding="16dp"
                         android:fontFamily="@font/dmsans"
-                        android:textSize="20sp"/>
+                        android:text="@string/userName"
+                        android:textColor="#ffff"
+                        android:textSize="20sp"
+                        android:visibility="gone" />
+
                     <TextView
                         android:id="@+id/tvUserEmail"
-                        android:text="@string/userEmail"
-                        android:visibility="gone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#ffff"
+                        android:drawableStart="@drawable/ic_email_white"
+                        android:drawablePadding="16dp"
                         android:fontFamily="@font/dmsans"
-                        android:textSize="20sp"/>
+                        android:text="@string/userEmail"
+                        android:textColor="#ffff"
+                        android:textSize="20sp"
+                        android:visibility="gone" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.cardview.widget.CardView>
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:fontFamily="@font/dmsans"
+                app:lottie_imageAssetsFolder="assets"
+                app:lottie_rawRes="@raw/add"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true"/>
+            <Button
+                android:id="@+id/btnAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_background"
+                android:fontFamily="@font/dmsans"
+                android:padding="10dp"
+                android:text="Add item"/>
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:fontFamily="@font/dmsans"
+                app:lottie_imageAssetsFolder="assets"
+                app:lottie_rawRes="@raw/todo"
+                app:lottie_loop="true"
+                app:lottie_autoPlay="true"/>
+            <Button
+                android:id="@+id/btnShowList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_background"
+                android:fontFamily="@font/dmsans"
+                android:padding="10dp"
+                android:text="Show list"/>
         </LinearLayout>
 
     </ScrollView>

@@ -15,4 +15,7 @@
     <string name="welcome">Welcome</string>
     <string name="userName">--</string>
     <string name="userEmail">--</string>
+    <string name="add">Add</string>
+    <string name="toDo">My To-Do list</string>
+    <string name="archived">Archived</string>
 </resources>

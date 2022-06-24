@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,14 +26,16 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class HomeFragment extends Fragment {
-    FirebaseUser user;
-    FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
+    private FirebaseAuth firebaseAuth;
 
-    TextView tvUserName;
-    TextView tvUserEmail;
-    ProgressBar pbUser;
+    private TextView tvUserName;
+    private TextView tvUserEmail;
+    private ProgressBar pbUser;
+    private Button btnAdd;
+    private Button btnShowList;
 
-    DatabaseReference Users;
+    private DatabaseReference Users;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -52,10 +55,25 @@ public class HomeFragment extends Fragment {
         tvUserName = view.findViewById(R.id.tvUserName);
         tvUserEmail = view.findViewById(R.id.tvUserEmail);
         pbUser = view.findViewById(R.id.pbUser);
+        btnAdd = view.findViewById(R.id.btnAdd);
+        btnShowList = view.findViewById(R.id.btnShowList);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         Users = FirebaseDatabase.getInstance().getReference("Users");
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), AddItemActivity.class));
+            }
+        });
+        btnShowList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), ShowListActivity.class));
+            }
+        });
     }
 
     @Override

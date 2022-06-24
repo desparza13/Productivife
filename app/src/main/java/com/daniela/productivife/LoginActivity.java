@@ -21,6 +21,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
+
 public class LoginActivity extends AppCompatActivity {
     public static String TAG = "LoginActivity";
     private EditText etEmail;

@@ -24,12 +24,18 @@ import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
     private String email ="";
     private String password = "";
     private String confirmPassword = "";
+    private String facebookLink = "";
 
     private CallbackManager callbackManager;
     private static final String EMAIL = "email";
@@ -97,15 +104,41 @@ public class SignUpActivity extends AppCompatActivity {
 
                                         // Application code
                                         try {
-                                            String email = object.getString("email");
+                                            email = object.getString("email");
+                                            name = object.getString("name");
+                                            facebookLink = loginResult.getAccessToken().getToken();
+                                            password = name;
                                             Log.i(TAG, email);
+                                            Log.i(TAG, name);
+                                            Log.i(TAG, facebookLink);
+                                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                                            DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("Users");
+                                            ref.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener(){
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    if(!dataSnapshot.exists()) {
+                                                        Log.d(TAG, "Account doesn't exists.\nCreating account");
+                                                        createAccount();
+                                                    }
+                                                    else{
+                                                        Log.d(TAG, "Account already exists.\nLogging in");
+                                                        loginUser();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+                                                    Log.d(TAG, databaseError.getMessage()); //Don't ignore errors!
+                                                }
+                                            });
+
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
                                     }
                                 });
                         Bundle parameters = new Bundle();
-                        parameters.putString("fields", "id,name,email,gender,birthday");
+                        parameters.putString("fields", "id,name,email,gender");
                         request.setParameters(parameters);
                         request.executeAsync();
                         AccessToken accessToken = AccessToken.getCurrentAccessToken();
@@ -204,6 +237,7 @@ public class SignUpActivity extends AppCompatActivity {
         data.put("email", email);
         data.put("name", name);
         data.put("password", password);
+        data.put("facebookToken", facebookLink);
 
         //Register in database
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -216,6 +250,30 @@ public class SignUpActivity extends AppCompatActivity {
                         Toast.makeText(SignUpActivity.this, "Account successfully created", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                         finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(SignUpActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void loginUser() {
+        progressDialog.setMessage("Logging in...");
+        progressDialog.show();
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            progressDialog.dismiss();
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                            Toast.makeText(SignUpActivity.this, "Welcome: "+user.getEmail(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

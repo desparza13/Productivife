@@ -20,6 +20,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -30,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -81,20 +83,46 @@ public class SignUpActivity extends AppCompatActivity {
         // If you are using in a fragment, call loginButton.setFragment(this);
 
         // Callback registration
-        LoginManager.getInstance().registerCallback(callbackManager,
+        btnFacebook.registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        Toast.makeText(SignUpActivity.this, "Log in through facebook successful", Toast.LENGTH_SHORT).show();
+                        GraphRequest request = GraphRequest.newMeRequest(
+                                loginResult.getAccessToken(),
+                                //Asynchronous
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override //When server answers
+                                    public void onCompleted(JSONObject object, GraphResponse response) {
+                                        Log.v("LoginActivity", response.toString());
+
+                                        // Application code
+                                        try {
+                                            String email = object.getString("email");
+                                            Log.i(TAG, email);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                        Bundle parameters = new Bundle();
+                        parameters.putString("fields", "id,name,email,gender,birthday");
+                        request.setParameters(parameters);
+                        request.executeAsync();
+                        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+                        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+                        Log.i(TAG, "Access token is: "+isLoggedIn);
+
                     }
 
                     @Override
                     public void onCancel() {
+                        Log.i(TAG,"Cancel");
                         Toast.makeText(SignUpActivity.this, "Log in through facebook cancelled", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
+                        Log.i(TAG,"Error");
                         Toast.makeText(SignUpActivity.this, "Log in through facebook error"+exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });

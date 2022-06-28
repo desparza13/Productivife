@@ -5,13 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,6 +86,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void onLogoutButton() {
         firebaseAuth.signOut();
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(@NonNull GraphResponse graphResponse) {
+                SharedPreferences pref = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.clear();
+                editor.commit();
+                LoginManager.getInstance().logOut();
+
+                Intent logoutint = new Intent(MainActivity.this,MainActivity.class);
+                logoutint.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(logoutint);
+
+            }
+        }).executeAsync();
         startActivity(new Intent(MainActivity.this, SignUpActivity.class));
         Toast.makeText(this, "Successfully logged out", Toast.LENGTH_SHORT).show();
     }

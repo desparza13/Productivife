@@ -3,6 +3,9 @@ buildscript {
     repositories {
         google()  // Google's Maven repository
         mavenCentral() //Needed for Facebook's login
+        jcenter()
+
+
     }
     dependencies {
         classpath 'com.google.gms:google-services:4.3.10'
@@ -12,7 +15,6 @@ plugins {
     id 'com.android.application' version '7.2.1' apply false
     id 'com.android.library' version '7.2.1' apply false
 }
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

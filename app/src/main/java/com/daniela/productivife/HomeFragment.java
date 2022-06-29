@@ -24,11 +24,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import es.dmoral.toasty.Toasty;
+
 
 public class HomeFragment extends Fragment {
     private FirebaseUser user;
     private FirebaseAuth firebaseAuth;
 
+    private TextView tvUid;
     private TextView tvUserName;
     private TextView tvUserEmail;
     private ProgressBar pbUser;
@@ -52,6 +55,7 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        tvUid = view.findViewById(R.id.tvUid);
         tvUserName = view.findViewById(R.id.tvUserName);
         tvUserEmail = view.findViewById(R.id.tvUserEmail);
         pbUser = view.findViewById(R.id.pbUser);
@@ -96,19 +100,25 @@ public class HomeFragment extends Fragment {
                 //If user exists
                 if (snapshot.exists()){
                     pbUser.setVisibility(View.GONE);
+                    tvUid.setVisibility(View.VISIBLE);
                     tvUserName.setVisibility(View.VISIBLE);
                     tvUserEmail.setVisibility(View.VISIBLE);
 
+                    String uid = "" + snapshot.child("uid").getValue();
                     String name = "" + snapshot.child("name").getValue();
                     String email = "" + snapshot.child("email").getValue();
 
+                    tvUid.setText(uid);
                     tvUserName.setText(name);
                     tvUserEmail.setText(email);
+
+                    btnAdd.setEnabled(true);
+                    btnShowList.setEnabled(true);
                 }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(),"Couldn't get user info", Toast.LENGTH_SHORT).show();
+                Toasty.error(getContext(),"Couldn't get user info", Toast.LENGTH_SHORT).show();
             }
         });
     }

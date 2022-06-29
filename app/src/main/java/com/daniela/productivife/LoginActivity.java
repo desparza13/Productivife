@@ -3,9 +3,12 @@ package com.daniela.productivife;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -23,6 +26,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+
+import es.dmoral.toasty.Toasty;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -43,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        configureToasty();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Login");
@@ -79,10 +85,10 @@ public class LoginActivity extends AppCompatActivity {
         password = etPassword.getText().toString();
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            Toast.makeText(this, "Enter a valid e-mail", Toast.LENGTH_SHORT).show();
+            Toasty.warning(this, "Enter a valid e-mail", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(password)){
-            Toast.makeText(this, "Password cannot be empty", Toast.LENGTH_SHORT).show();
+            Toasty.warning(this, "Password cannot be empty", Toast.LENGTH_SHORT).show();
         }
         else{
             LoginUser();
@@ -99,8 +105,8 @@ public class LoginActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             progressDialog.dismiss();
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+                            Toasty.normal(LoginActivity.this, "Welcome: "+user.getEmail(), AppCompatResources.getDrawable(LoginActivity.this,R.drawable.ic_person_white)).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            Toast.makeText(LoginActivity.this, "Welcome: "+user.getEmail(), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }
@@ -108,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -117,5 +123,13 @@ public class LoginActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
+    }
+
+    private void configureToasty(){
+        Typeface font = ResourcesCompat.getFont(this, R.font.dmsans); //keep style consistent throughout the app
+        Toasty.Config.getInstance().setToastTypeface(font)
+                .setTextSize(14)
+                .allowQueue(true)
+                .apply();
     }
 }

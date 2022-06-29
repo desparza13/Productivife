@@ -114,6 +114,7 @@
             android:background="@drawable/round_border"
             android:backgroundTint="@color/colorGreyBackground"
             android:maxLength="51"
+            android:inputType="date"
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout

@@ -2,9 +2,13 @@ package com.daniela.productivife;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -43,6 +48,8 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import es.dmoral.toasty.Toasty;
+
 public class SignUpActivity extends AppCompatActivity {
     public static final String TAG = "SignUp";
     private Button btnLogin;
@@ -60,7 +67,6 @@ public class SignUpActivity extends AppCompatActivity {
     private String email ="";
     private String password = "";
     private String confirmPassword = "";
-    private String facebookLink = "";
 
     private CallbackManager callbackManager;
     private static final String EMAIL = "email";
@@ -68,9 +74,11 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TypefaceProvider.registerDefaultIconSets();
         setContentView(R.layout.activity_sign_up);
 
         callbackManager = CallbackManager.Factory.create();
+        configureToasty();
 
         btnLogin = findViewById(R.id.btnLogin);
         btnSignup = findViewById(R.id.btnSignup);
@@ -87,7 +95,6 @@ public class SignUpActivity extends AppCompatActivity {
 
         btnFacebook = (LoginButton) findViewById(R.id.btnFacebook);
         btnFacebook.setReadPermissions(Arrays.asList(EMAIL));
-        // If you are using in a fragment, call loginButton.setFragment(this);
 
         // Callback registration
         btnFacebook.registerCallback(callbackManager,
@@ -106,12 +113,9 @@ public class SignUpActivity extends AppCompatActivity {
                                         try {
                                             email = object.getString("email");
                                             name = object.getString("name");
-                                            facebookLink = loginResult.getAccessToken().getToken();
-                                            password = name;
+                                            password = object.getString("name");
                                             Log.i(TAG, email);
                                             Log.i(TAG, name);
-                                            Log.i(TAG, facebookLink);
-                                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
                                             DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("Users");
                                             ref.orderByChild("email").equalTo(email).addValueEventListener(new ValueEventListener(){
                                                 @Override
@@ -150,13 +154,13 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onCancel() {
                         Log.i(TAG,"Cancel");
-                        Toast.makeText(SignUpActivity.this, "Log in through facebook cancelled", Toast.LENGTH_SHORT).show();
+                        Toasty.warning(SignUpActivity.this, "Log in through facebook cancelled", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
                         Log.i(TAG,"Error");
-                        Toast.makeText(SignUpActivity.this, "Log in through facebook error"+exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(SignUpActivity.this, "Log in through facebook error"+exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -186,19 +190,19 @@ public class SignUpActivity extends AppCompatActivity {
         confirmPassword = etConfirmPassword.getText().toString();
 
         if (TextUtils.isEmpty(name)){
-            Toast.makeText(this, "Enter a name", Toast.LENGTH_SHORT).show();
+            Toasty.warning(this,"Enter a name", Toast.LENGTH_SHORT).show();
         }
         else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            Toast.makeText(this, "Enter a valid e-mail", Toast.LENGTH_SHORT).show();
+            Toasty.warning(this, "Enter a valid e-mail", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(password)){
-            Toast.makeText(this, "Password cannot be empty", Toast.LENGTH_SHORT).show();
+            Toasty.warning(this, "Password cannot be empty", Toast.LENGTH_SHORT).show();
         }
         else if (TextUtils.isEmpty(confirmPassword)){
-            Toast.makeText(this, "Confirm your password", Toast.LENGTH_SHORT).show();
+            Toasty.warning(this, "Confirm your password", Toast.LENGTH_SHORT).show();
         }
         else if (!password.equals(confirmPassword)){
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            Toasty.warning(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
         }
         else{
             createAccount();
@@ -220,7 +224,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(SignUpActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(SignUpActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -237,7 +241,6 @@ public class SignUpActivity extends AppCompatActivity {
         data.put("email", email);
         data.put("name", name);
         data.put("password", password);
-        data.put("facebookToken", facebookLink);
 
         //Register in database
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -247,7 +250,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
-                        Toast.makeText(SignUpActivity.this, "Account successfully created", Toast.LENGTH_SHORT).show();
+                        Toasty.success(SignUpActivity.this, "Account successfully created", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                         finish();
                     }
@@ -255,7 +258,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(SignUpActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(SignUpActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -270,8 +273,8 @@ public class SignUpActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             progressDialog.dismiss();
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+                            Toasty.normal(SignUpActivity.this, "Welcome: "+user.getEmail(), AppCompatResources.getDrawable(SignUpActivity.this,R.drawable.ic_person_white)).show();
                             startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                            Toast.makeText(SignUpActivity.this, "Welcome: "+user.getEmail(), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }
@@ -279,8 +282,16 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(SignUpActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(SignUpActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void configureToasty(){
+        Typeface font = ResourcesCompat.getFont(this, R.font.dmsans); //keep style consistent throughout the app
+        Toasty.Config.getInstance().setToastTypeface(font)
+                .setTextSize(14)
+                .allowQueue(true)
+                .apply();
     }
 }

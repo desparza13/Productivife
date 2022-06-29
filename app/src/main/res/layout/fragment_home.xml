@@ -17,7 +17,7 @@
             android:padding="5dp">
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/colorAccent"
                 app:cardUseCompatPadding="true"
                 android:padding="0.2dp"
@@ -42,6 +42,18 @@
                         android:layout_height="wrap_content"/>
 
                     <TextView
+                        android:id="@+id/tvUid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_person_white"
+                        android:drawablePadding="16dp"
+                        android:fontFamily="@font/dmsans"
+                        android:text="@string/uid"
+                        android:textColor="#ffff"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+                    <TextView
                         android:id="@+id/tvUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -50,7 +62,7 @@
                         android:fontFamily="@font/dmsans"
                         android:text="@string/userName"
                         android:textColor="#ffff"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:visibility="gone" />
 
                     <TextView
@@ -62,7 +74,7 @@
                         android:fontFamily="@font/dmsans"
                         android:text="@string/userEmail"
                         android:textColor="#ffff"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:visibility="gone" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.cardview.widget.CardView>
@@ -81,7 +93,8 @@
                 android:background="@drawable/round_background"
                 android:fontFamily="@font/dmsans"
                 android:padding="10dp"
-                android:text="Add item"/>
+                android:text="Add item"
+                android:enabled="false"/>
             <com.airbnb.lottie.LottieAnimationView
                 android:layout_width="130dp"
                 android:layout_height="130dp"
@@ -97,7 +110,8 @@
                 android:background="@drawable/round_background"
                 android:fontFamily="@font/dmsans"
                 android:padding="10dp"
-                android:text="Show list"/>
+                android:text="Show list"
+                android:enabled="false"/>
         </LinearLayout>
 
     </ScrollView>

@@ -46,7 +46,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     //Facebook login
     implementation 'com.facebook.android:facebook-android-sdk:12.3.0'
-
+    //Bootstrap
+    implementation 'com.beardedhen:androidbootstrap:2.3.2'
+    //Toasty (Custom toast notificactions)
+    implementation 'com.github.GrenderG:Toasty:1.5.0'
 
 }
 apply plugin: 'com.android.application'

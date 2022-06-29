@@ -23,6 +23,7 @@
     <string name="facebook_app_id">722277378885577</string>
     <string name="fb_login_protocol_scheme">fb722277378885577</string>
     <string name="facebook_client_token">be775e6532c79d4834e7ddfcf0d98ff2</string>
+    <string name="uid">Uid</string>
 
 
 </resources>

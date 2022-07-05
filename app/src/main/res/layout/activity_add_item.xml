@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tilPriority"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:hint="Date"
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorGreyBackground"
             android:maxLength="51"
-            android:inputType="date"
+            android:inputType="none"
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
@@ -127,6 +127,7 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add"

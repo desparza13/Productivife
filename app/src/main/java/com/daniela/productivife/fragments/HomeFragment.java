@@ -1,4 +1,4 @@
-package com.daniela.productivife;
+package com.daniela.productivife.fragments;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -16,6 +16,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daniela.productivife.AddItemActivity;
+import com.daniela.productivife.R;
+import com.daniela.productivife.ShowListActivity;
+import com.daniela.productivife.SignUpActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -69,7 +73,12 @@ public class HomeFragment extends Fragment {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), AddItemActivity.class));
+                String userUid = tvUid.getText().toString();
+                String userEmail = tvUserEmail.getText().toString();
+                Intent intent = new Intent(getContext(), AddItemActivity.class);
+                intent.putExtra("uid", userUid);
+                intent.putExtra("email", userEmail);
+                startActivity(intent);
             }
         });
         btnShowList.setOnClickListener(new View.OnClickListener() {

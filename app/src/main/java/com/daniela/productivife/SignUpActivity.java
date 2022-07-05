@@ -45,8 +45,18 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import es.dmoral.toasty.Toasty;
 
@@ -114,6 +124,7 @@ public class SignUpActivity extends AppCompatActivity {
                                             email = object.getString("email");
                                             name = object.getString("name");
                                             password = object.getString("name");
+                                            //encrypt(password);
                                             Log.i(TAG, email);
                                             Log.i(TAG, name);
                                             DatabaseReference ref=FirebaseDatabase.getInstance().getReference().child("Users");
@@ -293,5 +304,10 @@ public class SignUpActivity extends AppCompatActivity {
                 .setTextSize(14)
                 .allowQueue(true)
                 .apply();
+    }
+
+    private void encrypt(String password){
+
+
     }
 }

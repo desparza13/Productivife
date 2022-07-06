@@ -28,13 +28,6 @@ public class ToDoItemAdapter extends RecyclerView.Adapter<ToDoItemAdapter.ViewHo
         this.toDoItems = toDoItems;
     }
 
-    private ToDoItemAdapter.ClickListener mClickListener;
-
-    public interface ClickListener{
-        void onItemClick(View view, int position);
-        void onItemLongClick(View view, int position);
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

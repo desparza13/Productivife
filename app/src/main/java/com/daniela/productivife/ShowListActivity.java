@@ -24,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -86,17 +87,23 @@ public class ShowListActivity extends AppCompatActivity{
             btnCancel = dialog.findViewById(R.id.btnCancel);
             btnDelete = dialog.findViewById(R.id.btnDelete);
 
+            String idToDoItem = toDoItems.get(viewHolder.getBindingAdapterPosition()).getIdToDoItem();
+
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toasty.info(ShowListActivity.this, "Cancel").show();
+                    dialog.dismiss();
+                    adapter.notifyDataSetChanged();
+
                 }
             });
 
             btnDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toasty.info(ShowListActivity.this, "Delete").show();
+                    deleteToDoItem(idToDoItem);
+                    toDoItems.clear();
+                    dialog.dismiss();
                 }
             });
             dialog.show();
@@ -114,6 +121,24 @@ public class ShowListActivity extends AppCompatActivity{
             super.onChildDraw(c, recyclerView, viewHolder, dX/4, dY, actionState, isCurrentlyActive);
         }
     };
+
+    private void deleteToDoItem(String idToDoItem) {
+        Query query = databaseReference.orderByChild("idToDoItem").equalTo(idToDoItem);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    dataSnapshot.getRef().removeValue();
+                }
+                Toasty.success(ShowListActivity.this, "The to-do item was successfully deleted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toasty.error(ShowListActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void populateToDoList() {
         databaseReference.addValueEventListener(new ValueEventListener() {

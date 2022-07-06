@@ -10,7 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" } //Needed for toasty
+        maven { url "https://jitpack.io" } //Needed for toasty and recyclerview
     }
 }
 rootProject.name = "Productivife"

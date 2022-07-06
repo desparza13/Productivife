@@ -21,6 +21,7 @@
         <entry key="app/src/main/res/layout/activity_show_list.xml" value="0.265625" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.26581573486328114" />
         <entry key="app/src/main/res/layout/activity_to_do_menu.xml" value="0.15121580547112462" />
+        <entry key="app/src/main/res/layout/dialog_delete.xml" value="0.5" />
         <entry key="app/src/main/res/layout/dropdown_item.xml" value="0.7667572463768116" />
         <entry key="app/src/main/res/layout/fragment_calendar.xml" value="0.5226449275362319" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.38119354248046877" />

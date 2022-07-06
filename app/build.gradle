@@ -51,6 +51,9 @@ dependencies {
     implementation 'com.beardedhen:androidbootstrap:2.3.2'
     //Toasty (Custom toast notificactions)
     implementation 'com.github.GrenderG:Toasty:1.5.0'
+    //Recycler view swipe decorator
+    implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.4'
+
 
 }
 apply plugin: 'com.android.application'

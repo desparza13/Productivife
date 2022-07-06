@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_gravity="center">
+    <TextView
+        android:id="@+id/AreYouSure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/are_you_sure"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/dmsans"/>
+    <TextView
+        android:id="@+id/ConfirmationText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/deleteConfirmation"
+        android:textSize="15sp"
+        android:fontFamily="@font/dmsans"
+        android:gravity="center"
+        android:layout_below="@+id/AreYouSure"/>
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ConfirmationText"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/dmsans"
+        android:text="@string/cancel"
+        android:textSize="15sp"
+        android:backgroundTint="@color/colorGrey"/>
+
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ConfirmationText"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/dmsans"
+        android:text="@string/delete"
+        android:textSize="15sp"
+        android:backgroundTint="@color/colorRed"/>
+
+</RelativeLayout>

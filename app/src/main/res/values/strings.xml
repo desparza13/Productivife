@@ -23,6 +23,10 @@
     <string name="fb_login_protocol_scheme">fb722277378885577</string>
     <string name="facebook_client_token">be775e6532c79d4834e7ddfcf0d98ff2</string>
     <string name="uid">Uid</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="deleteConfirmation">Do you really want to delete this item? This process cannot be undone</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
     <!--Add items-->
     <string-array name="priorities">
         <item>Important</item>

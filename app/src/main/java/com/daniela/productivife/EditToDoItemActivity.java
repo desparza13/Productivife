@@ -40,6 +40,7 @@ public class EditToDoItemActivity extends AppCompatActivity {
     private AutoCompleteTextView acEditPriority;
     private TextInputEditText etEditDate;
     private TextInputEditText etEditPlace;
+    private AutoCompleteTextView acEditState;
     private Button btnUpdate;
 
     private ArrayAdapter<String> adapterPriorities;
@@ -68,6 +69,7 @@ public class EditToDoItemActivity extends AppCompatActivity {
         acEditPriority = findViewById(R.id.acEditPriority);
         etEditDate = findViewById(R.id.etEditDate);
         etEditPlace = findViewById(R.id.etEditPlace);
+        acEditState = findViewById(R.id.acEditState);
         btnUpdate = findViewById(R.id.btnUpdate);
 
         toDoItem = (ToDoItem) Parcels.unwrap(getIntent().getParcelableExtra(ToDoItem.class.getSimpleName()));
@@ -77,10 +79,12 @@ public class EditToDoItemActivity extends AppCompatActivity {
         acEditPriority.setText(toDoItem.getPriority());
         etEditDate.setText(toDoItem.getDueDate());
         etEditPlace.setText(toDoItem.getPlace());
+        acEditState.setText(toDoItem.getState());
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         createDropdownPriorities();
+        createDropdownState();
         createDatePicker(year, month, day);
 
         getValues();
@@ -105,6 +109,17 @@ public class EditToDoItemActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String priority = parent.getItemAtPosition(position).toString();
+            }
+        });
+    }
+    private void createDropdownState(){
+        //Dropdown menu for priorities
+        adapterStates = new ArrayAdapter<String>(this, R.layout.dropdown_item,states);
+        acEditState.setAdapter(adapterStates);
+        acEditState.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String state = parent.getItemAtPosition(position).toString();
             }
         });
     }

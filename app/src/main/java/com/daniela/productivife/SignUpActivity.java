@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.preference.PreferenceManager;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -221,6 +224,11 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void createAccount() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user", email);
+        editor.putString("password",password);
+        editor.apply();
         progressDialog.setMessage("Creating account...");
         progressDialog.show();
         //Create user in Firebase
@@ -275,6 +283,11 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user", email);
+        editor.putString("password",password);
+        editor.apply();
         progressDialog.setMessage("Logging in...");
         progressDialog.show();
         firebaseAuth.signInWithEmailAndPassword(email, password)

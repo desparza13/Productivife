@@ -27,6 +27,7 @@
     <string name="deleteConfirmation">Do you really want to delete this item? This process cannot be undone</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="edit">edit</string>
     <!--Add items-->
     <string-array name="priorities">
         <item>Important</item>

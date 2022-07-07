@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddItemActivity">
+    tools:context=".EditToDoItemActivity">
     <TextView
-        android:id="@+id/Title"
+        android:id="@+id/EditTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:fontFamily="@font/dmsans"
-        android:text="Add new to-do item"
+        android:text="Edit to-do item"
         android:layout_marginTop="16dp"
         android:textSize="25sp"
         android:textStyle="bold"
         android:textColor="@color/black"/>
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilTitle"
+        android:id="@+id/tilEditTitle"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Title"
+        android:layout_below="@+id/EditTitle"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:hint="Title"
-        app:helperText="Required*"
-        app:helperTextTextColor="@color/colorAccent"
         app:counterEnabled="true"
         app:counterMaxLength="50"
         app:endIconMode="clear_text">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etTitle"
+            android:id="@+id/etEditTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorGreyBackground"
@@ -41,21 +40,22 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilDescription"
+        android:id="@+id/tilEditDescription"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tilTitle"
+        android:layout_below="@+id/tilEditTitle"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:hint="Description"
+        app:helperTextTextColor="@color/colorAccent"
         app:counterEnabled="true"
         app:counterMaxLength="150"
         app:endIconMode="clear_text">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etDescription"
+            android:id="@+id/etEditDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorGreyBackground"
@@ -63,21 +63,19 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilPriority"
+        android:id="@+id/tilEditPriority"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tilDescription"
+        android:layout_below="@+id/tilEditDescription"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:hint="Priority"
-        app:helperText="Required*"
-        app:helperTextTextColor="@color/colorAccent"
         >
         <AutoCompleteTextView
-            android:id="@+id/acPriority"
+            android:id="@+id/acEditPriority"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorGreyBackground"
@@ -85,21 +83,19 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilDate"
+        android:id="@+id/tilEditDate"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tilPriority"
+        android:layout_below="@+id/tilEditPriority"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:hint="Date"
-        app:helperText="Required*"
-        app:helperTextTextColor="@color/colorAccent"
         app:endIconMode="clear_text">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etDate"
+            android:id="@+id/etEditDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorGreyBackground"
@@ -108,11 +104,11 @@
             />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilPlace"
+        android:id="@+id/tilEditPlace"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tilDate"
+        android:layout_below="@+id/tilEditDate"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
@@ -120,21 +116,22 @@
         android:hint="Place"
         app:endIconMode="clear_text">
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPlace"
+            android:id="@+id/etEditPlace"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorGreyBackground"
             />
     </com.google.android.material.textfield.TextInputLayout>
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnAdd"
+        android:id="@+id/btnUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add"
+        android:text="Update"
         android:gravity="center"
         android:layout_centerInParent="true"
-        android:layout_below="@id/tilPlace"
+        android:layout_below="@id/tilEditPlace"
         android:layout_marginTop="30dp"
         android:background="@drawable/round_background" />
+
 
 </RelativeLayout>

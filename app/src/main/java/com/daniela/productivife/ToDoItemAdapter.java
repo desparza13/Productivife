@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.daniela.productivife.models.ToDoItem;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
@@ -67,7 +69,6 @@ public class ToDoItemAdapter extends RecyclerView.Adapter<ToDoItemAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
-            Toasty.info(context, "Click", Toast.LENGTH_SHORT).show();
             Log.i("Gesture","click");
             // gets item position
             int position = getBindingAdapterPosition();
@@ -77,7 +78,7 @@ public class ToDoItemAdapter extends RecyclerView.Adapter<ToDoItemAdapter.ViewHo
                 ToDoItem toDoItem = toDoItems.get(position);
                 // create intent for the new activity
                 Intent intent = new Intent(context, ToDoItemDetailsActivity.class);
-                //intent.putExtra(ToDoItem.class.getSimpleName(), Parcels.wrap(toDoItem));
+                intent.putExtra(ToDoItem.class.getSimpleName(), Parcels.wrap(toDoItem));
                 // show the activity
                 context.startActivity(intent);
             }

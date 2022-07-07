@@ -1,9 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/rlDetails"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:svgimageview="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ToDoItemDetailsActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ImageView
+        android:id="@+id/wave"
+        android:layout_marginTop="-120dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/wave" />
+
+    <TextView
+        android:id="@+id/tvDetailsTitle"
+        android:layout_marginTop="-120dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/dmsans"
+        android:gravity="center"
+        android:text="To do item"
+        android:textSize="30sp"
+        android:layout_below="@+id/wave"/>
+    <LinearLayout
+        android:id="@+id/llHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/tvDetailsTitle">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvDueDate"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="20dp"
+            app:cardBackgroundColor="@color/colorPrimaryOpacity">
+            <TextView
+                android:id="@+id/tvDueDateTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Due Date"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="2dp"/>
+
+            <TextView
+                android:id="@+id/tvDetailsDueDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="02/13/2022"
+                android:layout_gravity="bottom"
+                android:padding="10dp"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvPriority"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            app:cardBackgroundColor="@color/colorPrimaryOpacity">
+            <TextView
+                android:id="@+id/tvPriorityTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Priority"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:padding="2dp"/>
+            <TextView
+                android:id="@+id/tvDetailsPriority"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Normal"
+                android:layout_gravity="bottom"
+                android:padding="10dp"/>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvState"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="20dp"
+        app:cardBackgroundColor="@color/colorPrimaryOpacity"
+        android:layout_below="@+id/llHorizontal">
+        <TextView
+            android:id="@+id/tvStateTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="State"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="2dp"/>
+        <TextView
+            android:id="@+id/tvDetailsState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description of what do you have to do"
+            android:layout_gravity="bottom"
+            android:padding="10dp"
+            android:gravity="center"/>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvDescription"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="20dp"
+        app:cardBackgroundColor="@color/colorPrimaryOpacity"
+        android:layout_below="@+id/cvState">
+        <TextView
+            android:id="@+id/tvDescriptionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="2dp"/>
+        <TextView
+            android:id="@+id/tvDetailsDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description of what do you have to do"
+            android:layout_gravity="center"
+            android:gravity="center"/>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

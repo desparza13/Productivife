@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Productivife"
         tools:targetApi="31">
         <activity
+            android:name=".EditToDoItemActivity"
+            android:exported="false" />
+        <activity
             android:name=".ToDoItemDetailsActivity"
             android:exported="false" />
         <activity

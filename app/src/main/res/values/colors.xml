@@ -9,10 +9,14 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="colorPrimary">#00c2cb</color>
+    <color name="colorPrimaryOpacity">#3300c2cb</color>
     <color name="colorPrimaryDark">#FF018786</color>
     <color name="colorAccent">#5271ff</color>
     <color name="colorGreyBackground">#ECECEC</color>
     <color name="colorGrey">#8C8b8b</color>
     <color name="colorRed">#F73939</color>
+    <color name="colorRedOpacity">#33F73939</color>
+    <color name="colorGreyOpacity">#33ECECEC</color>
+    <color name="colorPrimaryAccentOpacity">#335271ff</color>
 
 </resources>

@@ -1,5 +1,8 @@
 package com.daniela.productivife.models;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class ToDoItem {
     private String idToDoItem;
     private String userUid;

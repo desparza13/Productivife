@@ -1,9 +1,11 @@
 package com.daniela.productivife;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,8 +19,12 @@ import android.widget.Toast;
 
 import com.daniela.productivife.models.ToDoItem;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.parceler.Parcels;
 
@@ -99,6 +105,37 @@ public class EditToDoItemActivity extends AppCompatActivity {
     }
 
     private void updateItem() {
+        String title = etEditTitle.getText().toString();
+        String description = etEditDescription.getText().toString();
+        String priority = acEditPriority.getText().toString();
+        String dueDate = etEditDate.getText().toString();
+        String place = etEditPlace.getText().toString();
+        String status = acEditState.getText().toString();
+
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("ToDoItems");
+        Query query = databaseReference.orderByChild("idToDoItem").equalTo(toDoItem.getIdToDoItem());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                 dataSnapshot.getRef().child("title").setValue(title);
+                 dataSnapshot.getRef().child("description").setValue(description);
+                 dataSnapshot.getRef().child("priority").setValue(priority);
+                 dataSnapshot.getRef().child("dueDate").setValue(dueDate);
+                 dataSnapshot.getRef().child("place").setValue(place);
+                 dataSnapshot.getRef().child("status").setValue(status);
+                }
+                Toasty.success(EditToDoItemActivity.this, "To-do item successfully updated").show();
+                Intent intent = new Intent(EditToDoItemActivity.this, ShowListActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toasty.error(EditToDoItemActivity.this, "Error while editing to-do item").show();
+            }
+        });
     }
 
     private void createDropdownPriorities(){

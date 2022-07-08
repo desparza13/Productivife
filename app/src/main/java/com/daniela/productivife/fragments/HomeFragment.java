@@ -1,6 +1,7 @@
 package com.daniela.productivife.fragments;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daniela.productivife.AddItemActivity;
+import com.daniela.productivife.MainActivity;
 import com.daniela.productivife.R;
 import com.daniela.productivife.ShowListActivity;
 import com.daniela.productivife.SignUpActivity;
@@ -118,6 +120,12 @@ public class HomeFragment extends Fragment {
                     String uid = "" + snapshot.child("uid").getValue();
                     String name = "" + snapshot.child("name").getValue();
                     String email = "" + snapshot.child("email").getValue();
+
+                    //Store data in shared preferences
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("name", name);
+                    editor.putString("uid",uid);
 
                     tvUid.setText(uid);
                     tvUserName.setText(name);

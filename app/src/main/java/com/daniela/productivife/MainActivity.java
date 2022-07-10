@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.daniela.productivife.fragments.CalendarFragment;
 import com.daniela.productivife.fragments.HomeFragment;
+import com.daniela.productivife.models.User;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -24,6 +25,12 @@ import com.facebook.login.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import es.dmoral.toasty.Toasty;
 
@@ -40,11 +47,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        String userEmail = sharedPreferences.getString("user", "email");
-        String userPassword = sharedPreferences.getString("password", "123");
-        Toasty.info(this, userEmail+" : "+userPassword).show();
         //Tabs menu
         bottomNavigationView = findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -52,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item){
                 Fragment fragment;
                 switch (item.getItemId()){
-                    case R.id.action_home:
-                        fragment = new HomeFragment();
-                        break;
                     case R.id.action_calendar:
                         fragment = new CalendarFragment();
                         break;
@@ -70,7 +69,34 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
+        getUser(user);
+    }
 
+    public void getUser(FirebaseUser user){ //Get user information from firebase and set it into the shared preferences
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
+        Query query = databaseReference.orderByChild("uid").equalTo(user.getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    User user = dataSnapshot.getValue(User.class);
+                    //saveUserInSharedPreferences(user);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.i(TAG, "Unable to retrieve user and save it in backup");
+            }
+        });
+    }
+
+    private void saveUserInSharedPreferences(User user) {
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", user.getEmail());
+        editor.putString("uid", user.getUid());
     }
 
     //Upper menu (Logout)
@@ -98,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 .Callback() {
             @Override
             public void onCompleted(@NonNull GraphResponse graphResponse) {
+                //Erase current user from backup
                 SharedPreferences pref = MainActivity.this.getPreferences(Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = pref.edit();
                 editor.clear();

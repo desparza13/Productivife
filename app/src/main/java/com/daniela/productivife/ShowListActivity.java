@@ -94,7 +94,6 @@ public class ShowListActivity extends AppCompatActivity{
                 public void onClick(View v) {
                     dialog.dismiss();
                     adapter.notifyDataSetChanged();
-
                 }
             });
 
@@ -107,7 +106,6 @@ public class ShowListActivity extends AppCompatActivity{
                 }
             });
             dialog.show();
-
         }
 
         @Override

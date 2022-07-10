@@ -52,7 +52,7 @@ public class ToDoItemDetailsActivity extends AppCompatActivity {
             cvPriority.setCardBackgroundColor(getResources().getColor(R.color.colorRedOpacity));
         }
         tvDetailsPriority.setText(toDoItem.getPriority());
-        tvDetailsState.setText(toDoItem.getState());
+        tvDetailsState.setText(toDoItem.getStatus());
 
         //Set description
         if (toDoItem.getDescription() == ""){

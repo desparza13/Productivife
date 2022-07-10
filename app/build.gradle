@@ -13,6 +13,13 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //Room schemas
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -60,6 +67,9 @@ dependencies {
     implementation 'com.caverock:androidsvg:1.2.1'
     //Shared preferences
     implementation 'androidx.preference:preference:1.1.1'
+    //Room for simple persistance with an ORM
+    implementation 'androidx.room:room-runtime:2.4.2'
+    annotationProcessor 'androidx.room:room-compiler:2.4.2'
 
 }
 apply plugin: 'com.android.application'

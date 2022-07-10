@@ -38,9 +38,9 @@ public class EditToDoItemActivity extends AppCompatActivity {
     private static final String TAG = "EditToDoItem";
     private String[] priorities = {"High", "Normal", "Low"};
     private String[] states = {"Incomplete", "Complete"};
-    String userUid;
-    String userEmail;
+
     private ToDoItem toDoItem;
+
     private TextInputEditText etEditTitle;
     private TextInputEditText etEditDescription;
     private AutoCompleteTextView acEditPriority;
@@ -65,11 +65,13 @@ public class EditToDoItemActivity extends AppCompatActivity {
         actionBar.setDisplayShowHomeEnabled(true); //Arrow back to home fragment
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        //Calendar that will aid on displaying the current day on the date picker for due date
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        //Find views in layout
         etEditTitle = findViewById(R.id.etEditTitle);
         etEditDescription = findViewById(R.id.etEditDescription);
         acEditPriority = findViewById(R.id.acEditPriority);
@@ -78,14 +80,16 @@ public class EditToDoItemActivity extends AppCompatActivity {
         acEditState = findViewById(R.id.acEditState);
         btnUpdate = findViewById(R.id.btnUpdate);
 
+        //Get item sent through the intent from details activity
         toDoItem = (ToDoItem) Parcels.unwrap(getIntent().getParcelableExtra(ToDoItem.class.getSimpleName()));
         Log.d(TAG, String.format("Editing '%s'", toDoItem.getTitle()));
+        //Set to-do item's information on the views
         etEditTitle.setText(toDoItem.getTitle());
         etEditDescription.setText(toDoItem.getDescription());
         acEditPriority.setText(toDoItem.getPriority());
         etEditDate.setText(toDoItem.getDueDate());
         etEditPlace.setText(toDoItem.getPlace());
-        acEditState.setText(toDoItem.getState());
+        acEditState.setText(toDoItem.getStatus());
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -93,18 +97,16 @@ public class EditToDoItemActivity extends AppCompatActivity {
         createDropdownState();
         createDatePicker(year, month, day);
 
-        getValues();
-
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateItem();
             }
         });
-
     }
 
     private void updateItem() {
+        //Get information
         String title = etEditTitle.getText().toString();
         String description = etEditDescription.getText().toString();
         String priority = acEditPriority.getText().toString();
@@ -112,6 +114,7 @@ public class EditToDoItemActivity extends AppCompatActivity {
         String place = etEditPlace.getText().toString();
         String status = acEditState.getText().toString();
 
+        //Find the to-do item on the database
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("ToDoItems");
         Query query = databaseReference.orderByChild("idToDoItem").equalTo(toDoItem.getIdToDoItem());
@@ -119,18 +122,18 @@ public class EditToDoItemActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    //Update values
                  dataSnapshot.getRef().child("title").setValue(title);
                  dataSnapshot.getRef().child("description").setValue(description);
                  dataSnapshot.getRef().child("priority").setValue(priority);
                  dataSnapshot.getRef().child("dueDate").setValue(dueDate);
                  dataSnapshot.getRef().child("place").setValue(place);
-                 dataSnapshot.getRef().child("status").setValue(status);
+                 dataSnapshot.getRef().child("state").setValue(status);
                 }
                 Toasty.success(EditToDoItemActivity.this, "To-do item successfully updated").show();
                 Intent intent = new Intent(EditToDoItemActivity.this, ShowListActivity.class);
                 startActivity(intent);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toasty.error(EditToDoItemActivity.this, "Error while editing to-do item").show();
@@ -138,52 +141,20 @@ public class EditToDoItemActivity extends AppCompatActivity {
         });
     }
 
-    private void createDropdownPriorities(){
+    private void createDropdownPriorities(){ //This way you ensure the user won't use options not considered or misspell a word
         //Dropdown menu for priorities
         adapterPriorities = new ArrayAdapter<String>(this, R.layout.dropdown_item,priorities);
         acEditPriority.setAdapter(adapterPriorities);
-        acEditPriority.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String priority = parent.getItemAtPosition(position).toString();
-            }
-        });
     }
-    private void createDropdownState(){
-        //Dropdown menu for priorities
+
+    private void createDropdownState(){ //This way you ensure the user won't use options not considered or misspell a word
+        //Dropdown menu for state (complete, incomplete)
         adapterStates = new ArrayAdapter<String>(this, R.layout.dropdown_item,states);
         acEditState.setAdapter(adapterStates);
-        acEditState.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String state = parent.getItemAtPosition(position).toString();
-            }
-        });
     }
-    /*
-    private void createDatePicker(int year, int month, int day){
-        //Date picker for due date
-        etDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        AddItemActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        onDateSetListener, year, month, day);
-                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                datePickerDialog.show();
-            }
-        });
-        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month+1;
-                String date = dayOfMonth+"/"+month+"/"+year;
-                etDate.setText(date);
-            }
-        };
-    }
-     */
-    private void createDatePicker(int year, int month, int day) {
+
+    private void createDatePicker(int year, int month, int day) { //Display calendar so that the user can easily pick a date
+        //Create datepicker dialog and display it
         etEditDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,6 +163,7 @@ public class EditToDoItemActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         String formatDay;
                         String formatMonth;
+                        //format day and month so that they always have two digits
                         if (day<10){
                             formatDay = "0"+String.valueOf(day);
                         } else{
@@ -217,19 +189,4 @@ public class EditToDoItemActivity extends AppCompatActivity {
         onBackPressed();
         return super.onSupportNavigateUp();
     }
-
-    private void getValues(){
-        userUid = getIntent().getStringExtra("uid");
-        userEmail = getIntent().getStringExtra("email");
-        Log.i(TAG, userUid+" "+userEmail);
-        getCurrentDateTime();
-
-    }
-
-    private String getCurrentDateTime(){
-        String registrationDateTime = new SimpleDateFormat("dd-MM-yyyy/HH:mm:ss a",
-                Locale.getDefault()).format(System.currentTimeMillis());
-        return registrationDateTime;
-    }
-
 }

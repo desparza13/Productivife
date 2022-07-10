@@ -1,35 +1,48 @@
 package com.daniela.productivife.models;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import org.parceler.Parcel;
 
 @Parcel
+@Entity
 public class ToDoItem {
+    @PrimaryKey
+    @ColumnInfo
     private String idToDoItem;
-    private String userUid;
-    private String userEmail;
+    @ColumnInfo
     private String currentDateTime;
+    @ColumnInfo
     private String title;
+    @ColumnInfo
     private String description = "";
+    @ColumnInfo
     private String priority = "Normal";
+    @ColumnInfo
     private String dueDate = "";
+    @ColumnInfo
     private String place = "";
-    private String state = "Incomplete";
+    @ColumnInfo
+    private String status = "Incomplete";
+    @ColumnInfo
+    private User user;
 
     public ToDoItem(){
 
     }
 
-    public ToDoItem(String idToDoItem, String userUid, String userEmail, String currentDateTime, String title, String description, String priority, String dueDate, String place, String state) {
+    public ToDoItem(String idToDoItem, String currentDateTime, String title, String description, String priority, String dueDate, String place, String state, User user) {
         this.idToDoItem = idToDoItem;
-        this.userUid = userUid;
-        this.userEmail = userEmail;
         this.currentDateTime = currentDateTime;
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.dueDate = dueDate;
         this.place = place;
-        this.state = state;
+        this.status = state;
+        this.user = user;
     }
 
     public String getIdToDoItem() {
@@ -38,22 +51,6 @@ public class ToDoItem {
 
     public void setIdToDoItem(String idToDoItem) {
         this.idToDoItem = idToDoItem;
-    }
-
-    public String getUserUid() {
-        return userUid;
-    }
-
-    public void setUserUid(String userUid) {
-        this.userUid = userUid;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
     }
 
     public String getCurrentDateTime() {
@@ -104,11 +101,19 @@ public class ToDoItem {
         this.place = place;
     }
 
-    public String getState() {
-        return state;
+    public String getStatus() {
+        return status;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

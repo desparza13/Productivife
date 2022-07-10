@@ -224,11 +224,13 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void createAccount() {
+        /*
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("user", email);
         editor.putString("password",password);
         editor.apply();
+         */
         progressDialog.setMessage("Creating account...");
         progressDialog.show();
         //Create user in Firebase
@@ -285,7 +287,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void loginUser() {
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user", email);
+        editor.putString("email", email);
         editor.putString("password",password);
         editor.apply();
         progressDialog.setMessage("Logging in...");

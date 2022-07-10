@@ -87,7 +87,7 @@ public class ToDoItemAdapter extends RecyclerView.Adapter<ToDoItemAdapter.ViewHo
         public void bind(ToDoItem toDoItem)
         {
             tvItemTitle.setText(toDoItem.getTitle());
-            tvItemStatus.setText(toDoItem.getState());
+            tvItemStatus.setText(toDoItem.getStatus());
             tvItemDueDate.setText(toDoItem.getDueDate());
             tvItemPriority.setText(toDoItem.getPriority());
             tvItemPlace.setText(toDoItem.getPlace());

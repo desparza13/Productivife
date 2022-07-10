@@ -53,11 +53,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         configureToasty();
 
+        //Create action back
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Login");
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
+        //Find views
         etEmail = findViewById(R.id.etEmailLogin);
         etPassword = findViewById(R.id.etPasswordLogin);
         btnSignup = findViewById(R.id.btnSignup);
@@ -65,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        //Set progress dialog
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setTitle("Wait please");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -83,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void checkData() {
+    private void checkData() { //Validate data entered by the user
         email = etEmail.getText().toString();
         password = etPassword.getText().toString();
 
@@ -101,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
     private void LoginUser() {
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user", email);
+        editor.putString("email", email);
         editor.putString("password",password);
         editor.apply();
         progressDialog.setMessage("Logging in...");
@@ -133,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
-    private void configureToasty(){
+    private void configureToasty(){ //Customized toasty to greet the user
         Typeface font = ResourcesCompat.getFont(this, R.font.dmsans); //keep style consistent throughout the app
         Toasty.Config.getInstance().setToastTypeface(font)
                 .setTextSize(14)

@@ -23,18 +23,18 @@ public class LoadingActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                verificateUser();
+                verifyUser();
             }
         }, time);
     }
-    private void verificateUser(){
+    private void verifyUser(){ //If user already logged in, go directly to main activity and skip Log in/Sign up process
+
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null){
             startActivity(new Intent(LoadingActivity.this, SignUpActivity.class));
-            finish();
         } else{
             startActivity(new Intent(LoadingActivity.this, MainActivity.class));
-            finish();
         }
+        finish();
     }
 }

@@ -74,6 +74,8 @@ public class HomeFragment extends Fragment {
         user = firebaseAuth.getCurrentUser();
         Users = FirebaseDatabase.getInstance().getReference("Users");
 
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,6 +109,10 @@ public class HomeFragment extends Fragment {
         }
     }
     private void loadData(){
+        //Using shared preferences information
+
+        //Firebase mode
+
         Users.child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) { //Allows to read database information on realtime
@@ -140,5 +146,7 @@ public class HomeFragment extends Fragment {
                 Toasty.error(getContext(),"Couldn't get user info", Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 }

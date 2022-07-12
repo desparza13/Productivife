@@ -1,5 +1,6 @@
 package com.daniela.productivife.models;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -11,6 +12,7 @@ import org.parceler.Parcel;
 public class User {
     @ColumnInfo
     @PrimaryKey
+    @NonNull
     private String uid;
 
     @ColumnInfo

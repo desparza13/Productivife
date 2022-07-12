@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getUser(FirebaseUser user){ //Get user information from firebase and set it into the shared preferences
-        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
         Query query = databaseReference.orderByChild("uid").equalTo(user.getUid());
@@ -82,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     User user = dataSnapshot.getValue(User.class);
-                    //saveUserInSharedPreferences(user);
+                    saveUserInSharedPreferences(user);
                 }
             }
             @Override
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveUserInSharedPreferences(User user) {
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("email", user.getEmail());
+        editor.putString("name", user.getEmail());
         editor.putString("uid", user.getUid());
     }
 

@@ -1,16 +1,20 @@
 package com.daniela.productivife.models;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import org.parceler.Parcel;
 
 @Parcel
-@Entity
+@Entity (foreignKeys = @ForeignKey(entity = User.class, parentColumns = "uid", childColumns = "userUid"))
 public class ToDoItem {
     @PrimaryKey
     @ColumnInfo
+    @NonNull
     private String idToDoItem;
     @ColumnInfo
     private String currentDateTime;
@@ -27,6 +31,8 @@ public class ToDoItem {
     @ColumnInfo
     private String status = "Incomplete";
     @ColumnInfo
+    private  String userUid;
+    @Ignore
     private User user;
 
     public ToDoItem(){
@@ -43,8 +49,10 @@ public class ToDoItem {
         this.place = place;
         this.status = state;
         this.user = user;
+        this.userUid = user.getUid();
     }
 
+    //Setters and getters
     public String getIdToDoItem() {
         return idToDoItem;
     }
@@ -115,5 +123,13 @@ public class ToDoItem {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getUserUid() {
+        return userUid;
+    }
+
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
     }
 }

@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.graphics.Canvas;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.daniela.productivife.models.ToDoItem;
+import com.daniela.productivife.models.ToDoItemDao;
+import com.daniela.productivife.models.ToDoItemWithUser;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +48,8 @@ public class ShowListActivity extends AppCompatActivity{
     private List<ToDoItem> toDoItems;
     private ToDoItemAdapter adapter;
 
+    ToDoItemDao toDoItemDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,10 +73,27 @@ public class ShowListActivity extends AppCompatActivity{
         adapter = new ToDoItemAdapter(this, toDoItems);
         rvToDoItems.setLayoutManager(new LinearLayoutManager(this));
         rvToDoItems.setAdapter(adapter);
-        populateToDoList();
+        //populateToDoList();
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(rvToDoItems);
+        toDoItemDao = ((BackupDatabaseApplication) getApplicationContext()).getBackupDatabase().toDoItemDao();
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Showing to-do items from SQL database");
+                List<ToDoItemWithUser> toDoItemWithUsers = toDoItemDao.toDoItems();
+                List<ToDoItem> toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
+                adapter.clear();
+                adapter.addAll(toDoItemsFromDB);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        itemTouchHelper.attachToRecyclerView(rvToDoItems);
+                    }
+                });
+            }
+        });
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

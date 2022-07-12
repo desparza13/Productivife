@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daniela.productivife.models.ToDoItem;
+import com.daniela.productivife.models.ToDoItemWithUser;
 
 import org.parceler.Parcels;
 
@@ -46,6 +47,16 @@ public class ToDoItemAdapter extends RecyclerView.Adapter<ToDoItemAdapter.ViewHo
     @Override
     public int getItemCount() {
         return toDoItems.size();
+    }
+
+    public void addAll(List<ToDoItem> list){
+        toDoItems.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        toDoItems.clear();
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

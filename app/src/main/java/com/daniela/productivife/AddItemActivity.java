@@ -2,13 +2,16 @@ package com.daniela.productivife;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.icu.text.CaseMap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.daniela.productivife.models.ToDoItem;
+import com.daniela.productivife.models.ToDoItemDao;
 import com.daniela.productivife.models.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +46,9 @@ public class AddItemActivity extends AppCompatActivity {
     private TextInputEditText etPlace;
     private Button btnAdd;
 
+    private ToDoItemDao toDoItemDao;
+    SupportSQLiteDatabase supportSQLiteDatabase;
+
     private ArrayAdapter<String> adapterPriorities;
 
     DatabaseReference databaseReference;
@@ -61,6 +68,9 @@ public class AddItemActivity extends AppCompatActivity {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        toDoItemDao = ((BackupDatabaseApplication) getApplicationContext()).getBackupDatabase().toDoItemDao();
+        supportSQLiteDatabase = ((BackupDatabaseApplication) getApplicationContext()).getBackupDatabase().getSQliteDB();
 
         //Find views in layout
         etTitle = findViewById(R.id.etTitle);
@@ -178,6 +188,45 @@ public class AddItemActivity extends AppCompatActivity {
             String dbName = "ToDoItems";
             //Push new object to the database
             databaseReference.child(dbName).child(userToDoItem).setValue(toDoItem);
+            /*supportSQLiteDatabase.execSQL("INSERT INTO User" +
+                    " VALUES ("+toDoItem.getUser().getUid()+"," +
+                    " "+toDoItem.getUser().getEmail()+");");*/
+            String prueba = "prueba";
+            /*
+            supportSQLiteDatabase.execSQL("INSERT INTO ToDoItem" +
+                    " VALUES ('desparzaespinosa@gmail.com'," +
+                            " '11-07-2022/14:37:15 PM'," +
+                            " "+toDoItem.getTitle()+"," +
+                            " "+toDoItem.getDescription()+"," +
+                            " "+toDoItem.getPriority()+"," +
+                            " "+toDoItem.getDueDate()+"," +
+                            " "+toDoItem.getPlace()+"," +
+                            " "+toDoItem.getStatus()+"," +
+                            " "+toDoItem.getUserUid()+");");
+            */
+            //supportSQLiteDatabase.execSQL("INSERT INTO ToDoItem (idToDoItem,currentDateTime) VALUES ('Daniela', 'Daniela')");
+            Cursor cursor = supportSQLiteDatabase.query("INSERT INTO ToDoItem" +
+                    " VALUES ('desparzaespinosa@gmail.com'," +
+                    " '11-07-2022/14:37:15 PM'," +
+                    " "+toDoItem.getTitle()+"," +
+                    " "+toDoItem.getDescription()+"," +
+                    " "+toDoItem.getPriority()+"," +
+                    " "+toDoItem.getDueDate()+"," +
+                    " "+toDoItem.getPlace()+"," +
+                    " "+toDoItem.getStatus()+"," +
+                    " "+toDoItem.getUserUid()+");");
+            cursor.close();
+
+            //Room way
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i(TAG, "Saving to-do items into SQL database");
+                    toDoItemDao.insertModel(toDoItem.getUser());
+                    toDoItemDao.insertModel(toDoItem);
+                }
+            });
+
             //Let the user know the item was created
             Toasty.success(AddItemActivity.this, "To Do Item successfully created",Toast.LENGTH_SHORT).show();
             //Go to main menu

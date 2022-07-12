@@ -1,7 +1,9 @@
 package com.daniela.productivife;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import android.app.DatePickerDialog;
@@ -24,13 +26,19 @@ import android.widget.Toast;
 
 import com.daniela.productivife.models.ToDoItem;
 import com.daniela.productivife.models.ToDoItemDao;
+import com.daniela.productivife.models.ToDoItemWithUser;
 import com.daniela.productivife.models.User;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
@@ -188,47 +196,50 @@ public class AddItemActivity extends AppCompatActivity {
             String dbName = "ToDoItems";
             //Push new object to the database
             databaseReference.child(dbName).child(userToDoItem).setValue(toDoItem);
-            /*supportSQLiteDatabase.execSQL("INSERT INTO User" +
-                    " VALUES ("+toDoItem.getUser().getUid()+"," +
-                    " "+toDoItem.getUser().getEmail()+");");*/
-            String prueba = "prueba";
-            /*
-            supportSQLiteDatabase.execSQL("INSERT INTO ToDoItem" +
-                    " VALUES ('desparzaespinosa@gmail.com'," +
-                            " '11-07-2022/14:37:15 PM'," +
-                            " "+toDoItem.getTitle()+"," +
-                            " "+toDoItem.getDescription()+"," +
-                            " "+toDoItem.getPriority()+"," +
-                            " "+toDoItem.getDueDate()+"," +
-                            " "+toDoItem.getPlace()+"," +
-                            " "+toDoItem.getStatus()+"," +
-                            " "+toDoItem.getUserUid()+");");
-            */
-            //supportSQLiteDatabase.execSQL("INSERT INTO ToDoItem (idToDoItem,currentDateTime) VALUES ('Daniela', 'Daniela')");
-            Cursor cursor = supportSQLiteDatabase.query("INSERT INTO ToDoItem" +
-                    " VALUES ('desparzaespinosa@gmail.com'," +
-                    " '11-07-2022/14:37:15 PM'," +
-                    " "+toDoItem.getTitle()+"," +
-                    " "+toDoItem.getDescription()+"," +
-                    " "+toDoItem.getPriority()+"," +
-                    " "+toDoItem.getDueDate()+"," +
-                    " "+toDoItem.getPlace()+"," +
-                    " "+toDoItem.getStatus()+"," +
-                    " "+toDoItem.getUserUid()+");");
-            cursor.close();
-
-            //Room way
+            //Add to local database
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    Log.i(TAG, "Saving to-do items into SQL database");
-                    toDoItemDao.insertModel(toDoItem.getUser());
-                    toDoItemDao.insertModel(toDoItem);
+                    if (toDoItemDao.getUser(toDoItem.getUser().getUid())!=0){
+                        toDoItemDao.addUser(toDoItem.getUser().getUid(), toDoItem.getUser().getEmail());
+                    }
+                    toDoItemDao.addItem(toDoItem.getIdToDoItem(),
+                            toDoItem.getCurrentDateTime(),
+                            toDoItem.getTitle(),
+                            toDoItem.getDescription(),
+                            toDoItem.getPriority(),
+                            toDoItem.getDueDate(),
+                            toDoItem.getPlace(),
+                            toDoItem.getStatus(),
+                            toDoItem.getUser().getUid());
                 }
             });
-
-            //Let the user know the item was created
-            Toasty.success(AddItemActivity.this, "To Do Item successfully created",Toast.LENGTH_SHORT).show();
+            //Check if it was uploaded to Firebase
+            FirebaseDatabase fbDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = fbDatabase.getReference("ToDoItems");
+            Query query = databaseReference.orderByChild("idToDoItem").equalTo(toDoItem.getIdToDoItem());
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()){
+                        //Let the user know the item was created
+                        Toasty.success(AddItemActivity.this, "To Do Item successfully created",Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        //Erase from local database
+                        AsyncTask.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                toDoItemDao.deleteToDoItem(idToDoItem);
+                            }
+                        });
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.i(TAG, "Unable to retrieve user and save it in backup");
+                }
+            });
             //Go to main menu
             onBackPressed();
         }

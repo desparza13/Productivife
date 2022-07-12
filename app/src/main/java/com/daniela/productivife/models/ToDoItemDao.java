@@ -18,22 +18,31 @@ public interface ToDoItemDao {
             " ORDER BY dueDate ASC")
     List<ToDoItemWithUser> toDoItems();
     @Query("SELECT * FROM ToDoItem") List<ToDoItem> toDoItem();
+    @Query("SELECT COUNT(uid) FROM User WHERE uid+:userUid") int getUser(String userUid);
+
+    @Query("INSERT INTO User VALUES (:uid, :email)") void addUser(String uid, String email);
+    @Query("INSERT INTO ToDoItem VALUES (:idToDoItem, :currentDateTime, :title, :description, :priority, :dueDate, :place, :status, :userUid)") void addItem(String idToDoItem,
+                                                                                                                                                  String currentDateTime,
+                                                                                                                                                  String title,
+                                                                                                                                                  String description,
+                                                                                                                                                  String priority,
+                                                                                                                                                  String dueDate,
+                                                                                                                                                  String place,
+                                                                                                                                                  String status,
+                                                                                                                                                  String userUid);
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertModel(ToDoItem toDoItem);
-    @Insert (onConflict = OnConflictStrategy.REPLACE)
-    void insertModel(List<ToDoItem> toDoItems);
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertModel(User user);
+    @Query("UPDATE User SET uid=:uid, email=:email") void  updateAllUser(String uid, String email);
+    @Query("UPDATE ToDoItem SET idToDoItem=:idToDoItem, currentDateTime=:currentDateTime, title=:title, description=:description, priority=:priority, dueDate=:dueDate, place=:place, status=:status, userUid=:userUid WHERE userUid=:userUid") void updateAllToDoItem(String idToDoItem,
+                                                                                                                                                                                                                                            String currentDateTime,
+                                                                                                                                                                                                                                            String title,
+                                                                                                                                                                                                                                            String description,
+                                                                                                                                                                                                                                            String priority,
+                                                                                                                                                                                                                                            String dueDate,
+                                                                                                                                                                                                                                            String place,
+                                                                                                                                                                                                                                            String status,
+                                                                                                                                                                                                                                            String userUid);
+    @Query("DELETE FROM User WHERE uid=:uid") void deleteUser(String uid);
+    @Query("DELETE FROM ToDoItem WHERE idToDoItem=:idToDoItem") void deleteToDoItem(String idToDoItem);
 
-    @Update
-    void update(ToDoItem toDoItem);
-    @Update
-    void updateAll(List<ToDoItem> toDoItems);
-
-    @Delete
-    void delete(ToDoItem toDoItem);
-    @Delete
-    void deleteAll(List<ToDoItem> toDoItems);
 }

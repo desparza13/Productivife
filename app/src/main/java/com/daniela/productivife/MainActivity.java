@@ -69,7 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-        getUser(user);
+        if (user!=null){
+            Log.i(TAG,user.toString());
+            getUser(user);
+        }
     }
 
     public void getUser(FirebaseUser user){ //Get user information from firebase and set it into the shared preferences
@@ -118,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onLogoutButton() {
-        firebaseAuth.signOut();
         new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
                 .Callback() {
             @Override
@@ -137,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }).executeAsync();
         startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+        firebaseAuth.signOut();
         Toasty.success(this, "Successfully logged out", Toast.LENGTH_SHORT).show();
     }
 }

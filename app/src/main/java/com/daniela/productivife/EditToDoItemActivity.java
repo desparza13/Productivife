@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daniela.productivife.models.ToDoItem;
+import com.daniela.productivife.models.ToDoItemDao;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,10 +55,14 @@ public class EditToDoItemActivity extends AppCompatActivity {
 
     DatabaseReference databaseReference;
 
+    private ToDoItemDao toDoItemDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_to_do_item);
+
+        toDoItemDao = ((BackupDatabaseApplication) getApplicationContext()).getBackupDatabase().toDoItemDao();
 
         //Create ActionBar
         ActionBar actionBar = getSupportActionBar();
@@ -114,7 +119,18 @@ public class EditToDoItemActivity extends AppCompatActivity {
         String place = etEditPlace.getText().toString();
         String status = acEditState.getText().toString();
 
-        //Find the to-do item on the database
+        //Edit local backup
+        toDoItemDao.updateAllToDoItem(toDoItem.getIdToDoItem(),
+                toDoItem.getCurrentDateTime(),
+                title,
+                description,
+                priority,
+                dueDate,
+                place,
+                status,
+                toDoItem.getUserUid());
+
+        //Find the to-do item on the database (Firebase)
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference("ToDoItems");
         Query query = databaseReference.orderByChild("idToDoItem").equalTo(toDoItem.getIdToDoItem());

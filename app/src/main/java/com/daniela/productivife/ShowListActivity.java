@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +47,7 @@ public class ShowListActivity extends AppCompatActivity{
     private Dialog dialog;
 
     private List<ToDoItem> toDoItems;
+    private List<ToDoItem> toDoItemsFromDB;
     private ToDoItemAdapter adapter;
 
     ToDoItemDao toDoItemDao;
@@ -82,7 +84,7 @@ public class ShowListActivity extends AppCompatActivity{
             public void run() {
                 Log.i(TAG, "Showing to-do items from SQL database");
                 List<ToDoItemWithUser> toDoItemWithUsers = toDoItemDao.toDoItems();
-                List<ToDoItem> toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
+                toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
                 adapter.clear();
                 adapter.addAll(toDoItemsFromDB);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
@@ -110,7 +112,7 @@ public class ShowListActivity extends AppCompatActivity{
             btnCancel = dialog.findViewById(R.id.btnCancel);
             btnDelete = dialog.findViewById(R.id.btnDelete);
 
-            String idToDoItem = toDoItems.get(viewHolder.getBindingAdapterPosition()).getIdToDoItem();
+            String idToDoItem = toDoItemsFromDB.get(viewHolder.getBindingAdapterPosition()).getIdToDoItem();
 
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -144,6 +146,23 @@ public class ShowListActivity extends AppCompatActivity{
     };
 
     private void deleteToDoItem(String idToDoItem) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                toDoItemDao.deleteToDoItem(idToDoItem);
+                List<ToDoItemWithUser> toDoItemWithUsers = toDoItemDao.toDoItems();
+                toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
+                adapter.clear();
+                adapter.addAll(toDoItemsFromDB);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        itemTouchHelper.attachToRecyclerView(rvToDoItems);
+                    }
+                });
+            }
+        });
         Query query = databaseReference.orderByChild("idToDoItem").equalTo(idToDoItem);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -152,6 +171,7 @@ public class ShowListActivity extends AppCompatActivity{
                     dataSnapshot.getRef().removeValue();
                 }
                 Toasty.success(ShowListActivity.this, "The to-do item was successfully deleted", Toast.LENGTH_SHORT).show();
+                //boolean successfullyDeleted = true;
             }
 
             @Override

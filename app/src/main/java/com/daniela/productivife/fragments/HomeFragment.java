@@ -110,43 +110,59 @@ public class HomeFragment extends Fragment {
     }
     private void loadData(){
         //Using shared preferences information
+        pbUser.setVisibility(View.GONE);
+        tvUid.setVisibility(View.VISIBLE);
+        tvUserName.setVisibility(View.VISIBLE);
+        tvUserEmail.setVisibility(View.VISIBLE);
 
-        //Firebase mode
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        String email = sharedPreferences.getString("email", "email");
+        String name = sharedPreferences.getString("name", "name");
+        String uid = sharedPreferences.getString("uid", "uid");
 
-        Users.child(user.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) { //Allows to read database information on realtime
-                //If user exists
-                if (snapshot.exists()){
-                    pbUser.setVisibility(View.GONE);
-                    tvUid.setVisibility(View.VISIBLE);
-                    tvUserName.setVisibility(View.VISIBLE);
-                    tvUserEmail.setVisibility(View.VISIBLE);
+        if (email!="email" && name!="name" && uid!="uid"){
+            tvUid.setText(uid);
+            tvUserName.setText(name);
+            tvUserEmail.setText(email);
 
-                    String uid = "" + snapshot.child("uid").getValue();
-                    String name = "" + snapshot.child("name").getValue();
-                    String email = "" + snapshot.child("email").getValue();
+            btnAdd.setEnabled(true);
+            btnShowList.setEnabled(true);
+        }
+        else{
+            //Firebase mode
+            Users.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) { //Allows to read database information on realtime
+                    //If user exists
+                    if (snapshot.exists()){
+                        pbUser.setVisibility(View.GONE);
+                        tvUid.setVisibility(View.VISIBLE);
+                        tvUserName.setVisibility(View.VISIBLE);
+                        tvUserEmail.setVisibility(View.VISIBLE);
 
-                    //Store data in shared preferences
-                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("name", name);
-                    editor.putString("uid",uid);
+                        String uid = "" + snapshot.child("uid").getValue();
+                        String name = "" + snapshot.child("name").getValue();
+                        String email = "" + snapshot.child("email").getValue();
 
-                    tvUid.setText(uid);
-                    tvUserName.setText(name);
-                    tvUserEmail.setText(email);
+                        //Store data in shared preferences
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("name", name);
+                        editor.putString("uid",uid);
 
-                    btnAdd.setEnabled(true);
-                    btnShowList.setEnabled(true);
+                        tvUid.setText(uid);
+                        tvUserName.setText(name);
+                        tvUserEmail.setText(email);
+
+                        btnAdd.setEnabled(true);
+                        btnShowList.setEnabled(true);
+                    }
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toasty.error(getContext(),"Couldn't get user info", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toasty.error(getContext(),"Couldn't get user info", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

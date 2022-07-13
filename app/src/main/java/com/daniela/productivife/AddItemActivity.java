@@ -56,7 +56,6 @@ public class AddItemActivity extends AppCompatActivity {
     private Button btnAdd;
 
     private ToDoItemDao toDoItemDao;
-    SupportSQLiteDatabase supportSQLiteDatabase;
 
     private ArrayAdapter<String> adapterPriorities;
 
@@ -79,7 +78,6 @@ public class AddItemActivity extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         toDoItemDao = ((BackupDatabaseApplication) getApplicationContext()).getBackupDatabase().toDoItemDao();
-        supportSQLiteDatabase = ((BackupDatabaseApplication) getApplicationContext()).getBackupDatabase().getSQliteDB();
 
         //Find views in layout
         etTitle = findViewById(R.id.etTitle);
@@ -210,7 +208,7 @@ public class AddItemActivity extends AppCompatActivity {
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (toDoItemDao.getUser(toDoItem.getUser().getUid())!=0){
+                    if (toDoItemDao.getUser(toDoItem.getUserUid())!=null){
                         toDoItemDao.addUser(toDoItem.getUser().getUid(), toDoItem.getUser().getEmail());
                     }
                     toDoItemDao.addItem(toDoItem.getIdToDoItem(),
@@ -225,31 +223,42 @@ public class AddItemActivity extends AppCompatActivity {
                 }
             });
             //Check if it was uploaded to Firebase
-            FirebaseDatabase fbDatabase = FirebaseDatabase.getInstance();
-            DatabaseReference databaseReference = fbDatabase.getReference("ToDoItems");
-            Query query = databaseReference.orderByChild("idToDoItem").equalTo(toDoItem.getIdToDoItem());
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()){
-                        //Let the user know the item was created
-                        Toasty.success(AddItemActivity.this, "To Do Item successfully created",Toast.LENGTH_SHORT).show();
+            if (InternetConnection.checkConnection(this)){
+                FirebaseDatabase fbDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference databaseReference = fbDatabase.getReference("ToDoItems");
+                Query query = databaseReference.orderByChild("idToDoItem").equalTo(toDoItem.getIdToDoItem());
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            //Let the user know the item was created
+                            Toasty.success(AddItemActivity.this, "To Do Item successfully created",Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            //Erase from local database
+                            AsyncTask.execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    toDoItemDao.deleteToDoItem(idToDoItem);
+                                }
+                            });
+                        }
                     }
-                    else {
-                        //Erase from local database
-                        AsyncTask.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                toDoItemDao.deleteToDoItem(idToDoItem);
-                            }
-                        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.i(TAG, "Unable to retrieve user and save it in backup");
                     }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.i(TAG, "Unable to retrieve user and save it in backup");
-                }
-            });
+                });
+            }
+            else{
+                AsyncTask.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        toDoItemDao.deleteToDoItem(idToDoItem);
+                    }
+                });
+            }
+
             //Go to main menu
             onBackPressed();
         }

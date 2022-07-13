@@ -77,9 +77,10 @@ public class ShowListActivity extends AppCompatActivity{
         adapter = new ToDoItemAdapter(this, toDoItems);
         rvToDoItems.setLayoutManager(new LinearLayoutManager(this));
         rvToDoItems.setAdapter(adapter);
-        //populateToDoList();
 
         toDoItemDao = ((BackupDatabaseApplication) getApplicationContext()).getBackupDatabase().toDoItemDao();
+        populateToDoList();
+
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -148,39 +149,37 @@ public class ShowListActivity extends AppCompatActivity{
     };
 
     private void deleteToDoItem(String idToDoItem) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                toDoItemDao.deleteToDoItem(idToDoItem);
-                List<ToDoItemWithUser> toDoItemWithUsers = toDoItemDao.toDoItems();
-                toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
-                adapter.clear();
-                adapter.addAll(toDoItemsFromDB);
-                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        itemTouchHelper.attachToRecyclerView(rvToDoItems);
-                    }
-                });
-            }
-        });
-        Query query = databaseReference.orderByChild("idToDoItem").equalTo(idToDoItem);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    dataSnapshot.getRef().removeValue();
+        if (InternetConnection.checkConnection(ShowListActivity.this)){
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    toDoItemDao.deleteToDoItem(idToDoItem);
+                    List<ToDoItemWithUser> toDoItemWithUsers = toDoItemDao.toDoItems();
+                    toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
+                    startActivity(new Intent(ShowListActivity.this, ShowListActivity.class));
                 }
-                Toasty.success(ShowListActivity.this, "The to-do item was successfully deleted", Toast.LENGTH_SHORT).show();
-                //boolean successfullyDeleted = true;
-            }
+            });
+            Query query = databaseReference.orderByChild("idToDoItem").equalTo(idToDoItem);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        dataSnapshot.getRef().removeValue();
+                    }
+                    Toasty.success(ShowListActivity.this, "The to-do item was successfully deleted", Toast.LENGTH_SHORT).show();
+                    //boolean successfullyDeleted = true;
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toasty.error(ShowListActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toasty.error(ShowListActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toasty.error(ShowListActivity.this, "Unable to delete item. Retry when you have network connection").show();
+            startActivity(new Intent(ShowListActivity.this, ShowListActivity.class));
+        }
+
     }
     @Override
     protected void onPause() {
@@ -198,7 +197,24 @@ public class ShowListActivity extends AppCompatActivity{
                 for(DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
                     ToDoItem toDoItem = dataSnapshot.getValue(ToDoItem.class);
-                    toDoItems.add(toDoItem);
+                    //toDoItems.add(toDoItem);
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (toDoItemDao.getToDoItem(toDoItem.getIdToDoItem())==null){
+                                toDoItemDao.addItem(toDoItem.getIdToDoItem(),
+                                        toDoItem.getCurrentDateTime(),
+                                        toDoItem.getTitle(),
+                                        toDoItem.getDescription(),
+                                        toDoItem.getPriority(),
+                                        toDoItem.getDueDate(),
+                                        toDoItem.getPlace(),
+                                        toDoItem.getStatus(),
+                                        toDoItem.getUserUid()
+                                );
+                            }
+                        }
+                    });
                 }
                 adapter.notifyDataSetChanged();
             }

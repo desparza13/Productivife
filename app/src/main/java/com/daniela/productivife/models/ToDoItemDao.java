@@ -18,7 +18,7 @@ public interface ToDoItemDao {
             " ORDER BY dueDate ASC")
     List<ToDoItemWithUser> toDoItems();
     @Query("SELECT * FROM ToDoItem") List<ToDoItem> toDoItem();
-    @Query("SELECT COUNT(uid) FROM User WHERE uid+:userUid") int getUser(String userUid);
+    @Query("SELECT * FROM User WHERE uid+:userUid") User getUser(String userUid);
     @Query("SELECT * FROM ToDoItem WHERE idToDoItem=:idToDoItem") ToDoItem getToDoItem(String idToDoItem);
 
     @Query("INSERT INTO User VALUES (:uid, :email)") void addUser(String uid, String email);

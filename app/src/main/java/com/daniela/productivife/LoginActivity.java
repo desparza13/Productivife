@@ -106,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("email", email);
         editor.putString("password",password);
-        editor.apply();
+        editor.commit();
         progressDialog.setMessage("Logging in...");
         progressDialog.show();
         firebaseAuth.signInWithEmailAndPassword(email, password)

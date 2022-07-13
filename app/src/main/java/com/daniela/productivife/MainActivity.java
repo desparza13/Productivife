@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("name", user.getEmail());
         editor.putString("uid", user.getUid());
+        editor.commit();
     }
 
     //Upper menu (Logout)

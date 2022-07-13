@@ -133,55 +133,60 @@ public class EditToDoItemActivity extends AppCompatActivity {
     }
 
     private void updateItem() {
-        //Get information
-        String title = etEditTitle.getText().toString();
-        String description = etEditDescription.getText().toString();
-        String priority = acEditPriority.getText().toString();
-        String dueDate = etEditDate.getText().toString();
-        String place = etEditPlace.getText().toString();
-        String status = acEditState.getText().toString();
+        if (InternetConnection.checkConnection(EditToDoItemActivity.this)){
+            //Get information
+            String title = etEditTitle.getText().toString();
+            String description = etEditDescription.getText().toString();
+            String priority = acEditPriority.getText().toString();
+            String dueDate = etEditDate.getText().toString();
+            String place = etEditPlace.getText().toString();
+            String status = acEditState.getText().toString();
 
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                //Edit local backup
-                toDoItemDao.updateAllToDoItem(toDoItem.getIdToDoItem(),
-                        toDoItem.getCurrentDateTime(),
-                        title,
-                        description,
-                        priority,
-                        dueDate,
-                        place,
-                        status,
-                        toDoItem.getUserUid());
-            }
-        });
-
-        //Find the to-do item on the database (Firebase)
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("ToDoItems");
-        Query query = databaseReference.orderByChild("idToDoItem").equalTo(toDoItem.getIdToDoItem());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    //Update values
-                 dataSnapshot.getRef().child("title").setValue(title);
-                 dataSnapshot.getRef().child("description").setValue(description);
-                 dataSnapshot.getRef().child("priority").setValue(priority);
-                 dataSnapshot.getRef().child("dueDate").setValue(dueDate);
-                 dataSnapshot.getRef().child("place").setValue(place);
-                 dataSnapshot.getRef().child("state").setValue(status);
+            AsyncTask.execute(new Runnable() {
+                @Override
+                public void run() {
+                    //Edit local backup
+                    toDoItemDao.updateAllToDoItem(toDoItem.getIdToDoItem(),
+                            toDoItem.getCurrentDateTime(),
+                            title,
+                            description,
+                            priority,
+                            dueDate,
+                            place,
+                            status,
+                            toDoItem.getUserUid());
                 }
-                Toasty.success(EditToDoItemActivity.this, "To-do item successfully updated").show();
-                Intent intent = new Intent(EditToDoItemActivity.this, ShowListActivity.class);
-                startActivity(intent);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toasty.error(EditToDoItemActivity.this, "Error while editing to-do item").show();
-            }
-        });
+            });
+
+            //Find the to-do item on the database (Firebase)
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference("ToDoItems");
+            Query query = databaseReference.orderByChild("idToDoItem").equalTo(toDoItem.getIdToDoItem());
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        //Update values
+                        dataSnapshot.getRef().child("title").setValue(title);
+                        dataSnapshot.getRef().child("description").setValue(description);
+                        dataSnapshot.getRef().child("priority").setValue(priority);
+                        dataSnapshot.getRef().child("dueDate").setValue(dueDate);
+                        dataSnapshot.getRef().child("place").setValue(place);
+                        dataSnapshot.getRef().child("state").setValue(status);
+                    }
+                    Toasty.success(EditToDoItemActivity.this, "To-do item successfully updated").show();
+                    Intent intent = new Intent(EditToDoItemActivity.this, ShowListActivity.class);
+                    startActivity(intent);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toasty.error(EditToDoItemActivity.this, "Error while editing to-do item").show();
+                }
+            });
+        } else {
+            Toasty.error(EditToDoItemActivity.this, "Unable to edit item. Retry when you have network connection").show();
+        }
+
     }
 
     private void createDropdownPriorities(){ //This way you ensure the user won't use options not considered or misspell a word

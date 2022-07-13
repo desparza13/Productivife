@@ -74,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
             getUser(user);
         }
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("lastActivity", getClass().getName());
+        editor.commit();
+    }
 
     public void getUser(FirebaseUser user){ //Get user information from firebase and set it into the shared preferences
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();

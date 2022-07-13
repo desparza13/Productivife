@@ -1,5 +1,7 @@
 package com.daniela.productivife.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;

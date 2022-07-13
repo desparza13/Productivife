@@ -129,6 +129,14 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("lastActivity", getClass().getName());
+        editor.commit();
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -142,5 +150,9 @@ public class LoginActivity extends AppCompatActivity {
                 .setTextSize(14)
                 .allowQueue(true)
                 .apply();
+    }
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, SignUpActivity.class));
     }
 }

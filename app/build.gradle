@@ -70,6 +70,8 @@ dependencies {
     //Room for simple persistance with an ORM
     implementation 'androidx.room:room-runtime:2.4.2'
     annotationProcessor 'androidx.room:room-compiler:2.4.2'
+    //Gson to save objects in sharedpreferences
+    implementation 'com.google.code.gson:gson:2.8.8'
 
 }
 apply plugin: 'com.android.application'

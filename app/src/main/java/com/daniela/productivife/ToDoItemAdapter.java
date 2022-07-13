@@ -2,6 +2,7 @@ package com.daniela.productivife;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -104,6 +105,7 @@ public class ToDoItemAdapter extends RecyclerView.Adapter<ToDoItemAdapter.ViewHo
             tvItemPlace.setText(toDoItem.getPlace());
             tvItemDescription.setText(toDoItem.getDescription());
         }
+
     }
 
 

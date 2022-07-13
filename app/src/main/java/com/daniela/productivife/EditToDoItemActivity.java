@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import org.parceler.Parcels;
 
@@ -87,6 +90,13 @@ public class EditToDoItemActivity extends AppCompatActivity {
 
         //Get item sent through the intent from details activity
         toDoItem = (ToDoItem) Parcels.unwrap(getIntent().getParcelableExtra(ToDoItem.class.getSimpleName()));
+        if (toDoItem==null){
+            Gson gson = new Gson();
+            SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+            String json = sharedPreferences.getString("lastDetails", "");
+            toDoItem = gson.fromJson(json, ToDoItem.class);
+            Log.d(TAG, toDoItem.toString());
+        }
         Log.d(TAG, String.format("Editing '%s'", toDoItem.getTitle()));
         //Set to-do item's information on the views
         etEditTitle.setText(toDoItem.getTitle());
@@ -110,6 +120,18 @@ public class EditToDoItemActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("lastActivity", getClass().getName());
+        Gson gson = new Gson();
+        String json = gson.toJson(toDoItem);
+        editor.putString("lastDetails", json);
+        editor.commit();
+    }
+
     private void updateItem() {
         //Get information
         String title = etEditTitle.getText().toString();
@@ -119,16 +141,21 @@ public class EditToDoItemActivity extends AppCompatActivity {
         String place = etEditPlace.getText().toString();
         String status = acEditState.getText().toString();
 
-        //Edit local backup
-        toDoItemDao.updateAllToDoItem(toDoItem.getIdToDoItem(),
-                toDoItem.getCurrentDateTime(),
-                title,
-                description,
-                priority,
-                dueDate,
-                place,
-                status,
-                toDoItem.getUserUid());
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                //Edit local backup
+                toDoItemDao.updateAllToDoItem(toDoItem.getIdToDoItem(),
+                        toDoItem.getCurrentDateTime(),
+                        title,
+                        description,
+                        priority,
+                        dueDate,
+                        place,
+                        status,
+                        toDoItem.getUserUid());
+            }
+        });
 
         //Find the to-do item on the database (Firebase)
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -204,5 +231,11 @@ public class EditToDoItemActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return super.onSupportNavigateUp();
+    }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, ToDoItemDetailsActivity.class);
+        intent.putExtra(ToDoItem.class.getSimpleName(), Parcels.wrap(toDoItem));
+        startActivity(intent);
     }
 }

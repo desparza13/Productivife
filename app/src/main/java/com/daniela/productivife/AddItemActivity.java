@@ -8,6 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -144,6 +145,15 @@ public class AddItemActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("lastActivity", getClass().getName());
+        editor.commit();
+    }
+
     private User getUser(){ //Get current logged in user from shared preference and create a model, this way each to-do item is owned by a user
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         String email = sharedPreferences.getString("email", "email");
@@ -243,5 +253,10 @@ public class AddItemActivity extends AppCompatActivity {
             //Go to main menu
             onBackPressed();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, MainActivity.class));
     }
 }

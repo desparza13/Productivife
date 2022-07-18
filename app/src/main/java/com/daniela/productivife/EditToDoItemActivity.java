@@ -3,6 +3,7 @@ package com.daniela.productivife;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Delete;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -237,10 +238,13 @@ public class EditToDoItemActivity extends AppCompatActivity {
         onBackPressed();
         return super.onSupportNavigateUp();
     }
+
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, ToDoItemDetailsActivity.class);
+        super.onBackPressed();
+        Intent intent = new Intent(EditToDoItemActivity.this, ToDoItemDetailsActivity.class);
         intent.putExtra(ToDoItem.class.getSimpleName(), Parcels.wrap(toDoItem));
+        // show the activity
         startActivity(intent);
     }
 }

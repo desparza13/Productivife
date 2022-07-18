@@ -81,7 +81,6 @@ public class ShowListActivity extends AppCompatActivity{
         toDoItemDao = ((BackupDatabaseApplication) getApplicationContext()).getBackupDatabase().toDoItemDao();
         populateToDoList();
 
-
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -235,5 +234,4 @@ public class ShowListActivity extends AppCompatActivity{
     public void onBackPressed() {
         startActivity(new Intent(this, MainActivity.class));
     }
-
 }

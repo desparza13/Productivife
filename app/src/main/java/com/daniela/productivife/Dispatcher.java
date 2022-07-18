@@ -20,7 +20,6 @@ public class Dispatcher extends Activity {
         } catch (ClassNotFoundException e) {
             activityClass = LoadingActivity.class;
         }
-
         startActivity(new Intent(this, activityClass));
     }
 }

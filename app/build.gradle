@@ -72,6 +72,8 @@ dependencies {
     annotationProcessor 'androidx.room:room-compiler:2.4.2'
     //Gson to save objects in sharedpreferences
     implementation 'com.google.code.gson:gson:2.8.8'
+    //Calendar view
+    implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
 
 }
 apply plugin: 'com.android.application'

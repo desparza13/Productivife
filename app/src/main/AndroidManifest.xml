@@ -42,7 +42,6 @@
         <activity
             android:name=".LoadingActivity"
             android:exported="true">
-
         </activity>
         <activity android:name=".Dispatcher"
             android:exported="true">

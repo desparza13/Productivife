@@ -45,5 +45,4 @@ public interface ToDoItemDao {
                                                                                                                                                                                                                                             String userUid);
     @Query("DELETE FROM User WHERE uid=:uid") void deleteUser(String uid);
     @Query("DELETE FROM ToDoItem WHERE idToDoItem=:idToDoItem") void deleteToDoItem(String idToDoItem);
-
 }

@@ -12,6 +12,7 @@
         android:id="@+id/svSearchTitle"
         app:iconifiedByDefault="false"
         app:queryHint="Title"></androidx.appcompat.widget.SearchView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvToDoItems"
         android:layout_width="match_parent"

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item app:showAsAction="always"
+        android:title="Filter"
+        android:icon="@drawable/ic_filter_white">
+        <menu>
+            <item android:id="@+id/btnAll"
+                android:title="All"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_all"/>
+            <item android:id="@+id/btnHighPriority"
+                android:title="High priority"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_star"/>
+            <item android:id="@+id/btnNormalPriority"
+                android:title="Normal priority"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_normal_star"/>
+            <item android:id="@+id/btnLowPriority"
+                android:title="Low priority"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_low_star"/>
+        </menu>
+    </item>
+</menu>

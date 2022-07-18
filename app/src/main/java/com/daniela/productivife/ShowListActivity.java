@@ -113,6 +113,27 @@ public class ShowListActivity extends AppCompatActivity{
             }
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                List<ToDoItem> filteredItems = new ArrayList<ToDoItem>();
+                for (ToDoItem toDoItem : toDoItemsFromDB){
+                    if(toDoItem.getTitle().toLowerCase().contains(s.toLowerCase())){
+                        filteredItems.add(toDoItem);
+                    }
+                }
+
+                adapter.clear();
+                adapter.addAll(filteredItems);
+                return false;
+            }
+        });
+
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

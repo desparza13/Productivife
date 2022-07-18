@@ -3,6 +3,8 @@ package com.daniela.productivife;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -34,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +47,10 @@ public class ShowListActivity extends AppCompatActivity{
     public static final String TAG = "ShowList";
     private RecyclerView rvToDoItems;
     private FirebaseDatabase firebaseDatabase;
+    private SearchView searchView;
     private DatabaseReference databaseReference;
+
+    private  static final long RIPPLE_DURATION = 250;
 
     private Dialog dialog;
 
@@ -65,6 +71,7 @@ public class ShowListActivity extends AppCompatActivity{
         actionBar.setDisplayShowHomeEnabled(true); //Arrow back to home fragment
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        searchView = findViewById(R.id.svSearchTitle);
         rvToDoItems = findViewById(R.id.rvToDoItems);
         rvToDoItems.setHasFixedSize(true); //the recycler view will adapt to the list size
 
@@ -87,6 +94,14 @@ public class ShowListActivity extends AppCompatActivity{
                 Log.i(TAG, "Showing to-do items from SQL database");
                 List<ToDoItemWithUser> toDoItemWithUsers = toDoItemDao.toDoItems();
                 toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
+                FilterSort.print(toDoItemsFromDB);
+                try {
+                    FilterSort.sort(toDoItemsFromDB, 0, toDoItemWithUsers.size()-1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                FilterSort.print(toDoItemsFromDB);
+                /*
                 adapter.clear();
                 adapter.addAll(toDoItemsFromDB);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
@@ -96,8 +111,10 @@ public class ShowListActivity extends AppCompatActivity{
                         itemTouchHelper.attachToRecyclerView(rvToDoItems);
                     }
                 });
+                 */
             }
         });
+
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

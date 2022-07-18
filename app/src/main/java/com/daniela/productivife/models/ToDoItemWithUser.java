@@ -22,4 +22,9 @@ public class ToDoItemWithUser {
         }
         return toDoItems;
     }
+
+    public static ToDoItem getToDoItem(ToDoItemWithUser toDoItemWithUser){
+        ToDoItem toDoItem = toDoItemWithUser.toDoItem;
+        return toDoItem;
+    }
 }

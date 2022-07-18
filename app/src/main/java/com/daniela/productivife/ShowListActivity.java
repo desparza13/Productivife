@@ -96,12 +96,11 @@ public class ShowListActivity extends AppCompatActivity{
                 toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
                 FilterSort.print(toDoItemsFromDB);
                 try {
-                    FilterSort.sort(toDoItemsFromDB, 0, toDoItemWithUsers.size()-1);
+                    FilterSort.sort(toDoItemsFromDB, 0, toDoItemWithUsers.size()-1, FilterSort.ASCENDANT);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
                 FilterSort.print(toDoItemsFromDB);
-                /*
                 adapter.clear();
                 adapter.addAll(toDoItemsFromDB);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
@@ -111,7 +110,6 @@ public class ShowListActivity extends AppCompatActivity{
                         itemTouchHelper.attachToRecyclerView(rvToDoItems);
                     }
                 });
-                 */
             }
         });
 

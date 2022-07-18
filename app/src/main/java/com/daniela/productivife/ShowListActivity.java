@@ -4,32 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.AsyncListDiffer;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.daniela.productivife.models.ToDoItem;
 import com.daniela.productivife.models.ToDoItemDao;
 import com.daniela.productivife.models.ToDoItemWithUser;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,17 +42,16 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 public class ShowListActivity extends AppCompatActivity{
     public static final String TAG = "ShowList";
+    private String loggedUser;
+    private int appliedFilter = FilterSort.ALL_PRIORITY;
     private RecyclerView rvToDoItems;
-    private FirebaseDatabase firebaseDatabase;
-    private SearchView searchView;
     private DatabaseReference databaseReference;
-
-    private  static final long RIPPLE_DURATION = 250;
 
     private Dialog dialog;
 
     private List<ToDoItem> toDoItems;
     private List<ToDoItem> toDoItemsFromDB;
+    private List<ToDoItem> filteredItems;
     private ToDoItemAdapter adapter;
 
     ToDoItemDao toDoItemDao;
@@ -66,22 +61,28 @@ public class ShowListActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_list);
 
+        //Get user
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        loggedUser = sharedPreferences.getString("uid", "uid");
+
         //Create ActionBar
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setTitle("My to do items");
         actionBar.setDisplayShowHomeEnabled(true); //Arrow back to home fragment
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        searchView = findViewById(R.id.svSearchTitle);
+        SearchView searchView = findViewById(R.id.svSearchTitle);
         rvToDoItems = findViewById(R.id.rvToDoItems);
         rvToDoItems.setHasFixedSize(true); //the recycler view will adapt to the list size
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("ToDoItems");
 
         dialog = new Dialog(ShowListActivity.this);
 
         toDoItems = new ArrayList<>();
+        filteredItems = new ArrayList<>();
         adapter = new ToDoItemAdapter(this, toDoItems);
         rvToDoItems.setLayoutManager(new LinearLayoutManager(this));
         rvToDoItems.setAdapter(adapter);
@@ -95,15 +96,10 @@ public class ShowListActivity extends AppCompatActivity{
                 Log.i(TAG, "Showing to-do items from SQL database");
                 List<ToDoItemWithUser> toDoItemWithUsers = toDoItemDao.toDoItems();
                 toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
-                FilterSort.print(toDoItemsFromDB);
-                try {
-                    FilterSort.sort(toDoItemsFromDB, 0, toDoItemWithUsers.size()-1, FilterSort.ASCENDANT);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                FilterSort.print(toDoItemsFromDB);
+                filterList(appliedFilter);
+                Log.i(TAG, filteredItems.toString());
                 adapter.clear();
-                adapter.addAll(toDoItemsFromDB);
+                adapter.addAll(filteredItems);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -122,7 +118,7 @@ public class ShowListActivity extends AppCompatActivity{
 
             @Override
             public boolean onQueryTextChange(String s) {
-                List<ToDoItem> filteredItems = new ArrayList<ToDoItem>();
+                List<ToDoItem> filteredItems = new ArrayList<>();
                 for (ToDoItem toDoItem : toDoItemsFromDB){
                     if(toDoItem.getTitle().toLowerCase().contains(s.toLowerCase())){
                         filteredItems.add(toDoItem);
@@ -134,7 +130,6 @@ public class ShowListActivity extends AppCompatActivity{
                 return false;
             }
         });
-
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -184,6 +179,40 @@ public class ShowListActivity extends AppCompatActivity{
         }
     };
 
+    private void sort(int direction){
+        try {
+            FilterSort.sort(filteredItems, 0, filteredItems.size()-1, direction);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        adapter.clear();
+        adapter.addAll(filteredItems);
+    }
+
+    private void filterList(int appliedFilter){
+        filteredItems.clear();
+        if (loggedUser != "uid"){
+            for (ToDoItem toDoItem : toDoItemsFromDB){
+                if (toDoItem.getUserUid().equals(loggedUser)){
+                    if (appliedFilter==FilterSort.LOW_PRIORITY && toDoItem.getPriority().equals("Low")){
+                        filteredItems.add(toDoItem);
+                    }
+                    else if (appliedFilter==FilterSort.NORMAL_PRIORITY && toDoItem.getPriority().equals("Normal")){
+                        filteredItems.add(toDoItem);
+                    }
+                    else if (appliedFilter==FilterSort.HIGH_PRIORITY && toDoItem.getPriority().equals("High")){
+                        filteredItems.add(toDoItem);
+                    }
+                    else if (appliedFilter==FilterSort.ALL_PRIORITY){
+                        filteredItems.add(toDoItem);
+                    }
+                }
+            }
+        } else {
+            Toasty.error(ShowListActivity.this, "An error occured retrieving the user").show();
+        }
+    }
+
     private void deleteToDoItem(String idToDoItem) {
         if (InternetConnection.checkConnection(ShowListActivity.this)){
             AsyncTask.execute(new Runnable() {
@@ -216,6 +245,12 @@ public class ShowListActivity extends AppCompatActivity{
             startActivity(new Intent(ShowListActivity.this, ShowListActivity.class));
         }
 
+    }
+    private void updateList(){
+        filterList(appliedFilter);
+        Log.i(TAG, filteredItems.toString());
+        adapter.clear();
+        adapter.addAll(filteredItems);
     }
     @Override
     protected void onPause() {
@@ -275,6 +310,36 @@ public class ShowListActivity extends AppCompatActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_showlist, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int item_id = item.getItemId();
+        switch(item_id){
+            case R.id.btnAll:
+                appliedFilter = FilterSort.ALL_PRIORITY;
+                updateList();
+                break;
+            case R.id.btnHighPriority:
+                appliedFilter = FilterSort.HIGH_PRIORITY;
+                updateList();
+                break;
+            case R.id.btnNormalPriority:
+                appliedFilter = FilterSort.NORMAL_PRIORITY;
+                updateList();
+                break;
+            case R.id.btnLowPriority:
+                appliedFilter = FilterSort.LOW_PRIORITY;
+                updateList();
+                break;
+            case R.id.btnAscendant:
+                sort(FilterSort.ASCENDANT);
+                break;
+            case R.id.btnDescendant:
+                sort(FilterSort.DESCENDANT);
+                break;
+        }
         return true;
     }
 }

@@ -14,6 +14,11 @@ import java.util.List;
 public class FilterSort {
     public static int ASCENDANT = 1;
     public static int DESCENDANT = 0;
+    public static int LOW_PRIORITY = 0;
+    public static int NORMAL_PRIORITY = 1;
+    public static int HIGH_PRIORITY = 2;
+    public static int ALL_PRIORITY = 3;
+
     public static boolean sort (List<ToDoItem> toDoItems, int from, int to, int direction) throws ParseException {
         if (toDoItems.size() <=1){
             Log.i("Sort", "Couldn't get list");

@@ -23,4 +23,19 @@
                 android:icon="@drawable/ic_low_star"/>
         </menu>
     </item>
+    <item app:showAsAction="always"
+        android:title="Sort"
+        android:icon="@drawable/ic_sort">
+        <menu>
+            <item android:id="@+id/btnAscendant"
+                android:title="Ascendant due date"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_up"/>
+            <item android:id="@+id/btnDescendant"
+                android:title="Descendant due date"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_down"/>
+        </menu>
+    </item>
+
 </menu>

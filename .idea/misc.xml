@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_all.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_calendar.xml" value="0.5235" />
+        <entry key="app/src/main/res/drawable/ic_down.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_email.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.5235" />
         <entry key="app/src/main/res/drawable/ic_lock.xml" value="0.2365" />
@@ -13,7 +14,9 @@
         <entry key="app/src/main/res/drawable/ic_normal_star.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_person.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/ic_person_24.xml" value="0.2365" />
+        <entry key="app/src/main/res/drawable/ic_sort.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_star.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_up.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_username.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/round_background.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/round_border.xml" value="0.2365" />

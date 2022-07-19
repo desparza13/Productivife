@@ -118,15 +118,15 @@ public class ShowListActivity extends AppCompatActivity{
 
             @Override
             public boolean onQueryTextChange(String s) {
-                List<ToDoItem> filteredItems = new ArrayList<>();
-                for (ToDoItem toDoItem : toDoItemsFromDB){
+                List<ToDoItem> searched = new ArrayList<>();
+                for (ToDoItem toDoItem : filteredItems){
                     if(toDoItem.getTitle().toLowerCase().contains(s.toLowerCase())){
-                        filteredItems.add(toDoItem);
+                        searched.add(toDoItem);
                     }
                 }
 
                 adapter.clear();
-                adapter.addAll(filteredItems);
+                adapter.addAll(searched);
                 return false;
             }
         });

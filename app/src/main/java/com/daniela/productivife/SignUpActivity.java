@@ -188,6 +188,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                overridePendingTransition(R.anim.slide_from_bottom,R.anim.slide_to_top );
             }
         });
     }
@@ -273,6 +274,7 @@ public class SignUpActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         Toasty.success(SignUpActivity.this, "Account successfully created", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                        overridePendingTransition(R.anim.zoom_in, R.anim.static_animation);
                         finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -309,6 +311,7 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             Toasty.normal(SignUpActivity.this, "Welcome: "+user.getEmail(), AppCompatResources.getDrawable(SignUpActivity.this,R.drawable.ic_person_white)).show();
                             startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                            overridePendingTransition(R.anim.zoom_in, R.anim.static_animation);
                             finish();
                         }
                     }

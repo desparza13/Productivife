@@ -32,8 +32,10 @@ public class LoadingActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null){
             startActivity(new Intent(LoadingActivity.this, SignUpActivity.class));
+            overridePendingTransition(R.anim.zoom_in, R.anim.static_animation);
         } else{
             startActivity(new Intent(LoadingActivity.this, MainActivity.class));
+            overridePendingTransition(R.anim.zoom_in, R.anim.static_animation);
         }
         finish();
     }

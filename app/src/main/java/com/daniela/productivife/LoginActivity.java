@@ -5,7 +5,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.preference.PreferenceManager;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -26,9 +25,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 
 import es.dmoral.toasty.Toasty;
 
@@ -82,6 +78,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+                //custom transition
+                overridePendingTransition(R.anim.slide_from_top, R.anim.slide_to_bottom);
             }
         });
     }
@@ -118,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             Toasty.normal(LoginActivity.this, "Welcome: "+user.getEmail(), AppCompatResources.getDrawable(LoginActivity.this,R.drawable.ic_person_white)).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            overridePendingTransition(R.anim.zoom_in, R.anim.static_animation);
                             finish();
                         }
                     }
@@ -154,5 +153,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         startActivity(new Intent(this, SignUpActivity.class));
+        overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
     }
 }

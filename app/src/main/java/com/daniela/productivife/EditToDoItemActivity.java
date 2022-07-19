@@ -178,6 +178,7 @@ public class EditToDoItemActivity extends AppCompatActivity {
                     Toasty.success(EditToDoItemActivity.this, "To-do item successfully updated").show();
                     Intent intent = new Intent(EditToDoItemActivity.this, ShowListActivity.class);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -246,5 +247,6 @@ public class EditToDoItemActivity extends AppCompatActivity {
         intent.putExtra(ToDoItem.class.getSimpleName(), Parcels.wrap(toDoItem));
         // show the activity
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
     }
 }

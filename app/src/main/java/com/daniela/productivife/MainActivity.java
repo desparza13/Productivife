@@ -144,10 +144,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent logoutint = new Intent(MainActivity.this,MainActivity.class);
                 logoutint.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(logoutint);
-
             }
         }).executeAsync();
         startActivity(new Intent(MainActivity.this, SignUpActivity.class));
+        overridePendingTransition(R.anim.zoom_out, R.anim.static_animation);
         firebaseAuth.signOut();
         Toasty.success(this, "Successfully logged out", Toast.LENGTH_SHORT).show();
     }

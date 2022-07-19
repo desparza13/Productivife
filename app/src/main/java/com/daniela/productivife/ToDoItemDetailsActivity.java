@@ -106,6 +106,7 @@ public class ToDoItemDetailsActivity extends AppCompatActivity {
                 intent.putExtra(ToDoItem.class.getSimpleName(), Parcels.wrap(toDoItem));
                 // show the activity
                 startActivity(intent);
+                overridePendingTransition(R.anim.zoom_out, R.anim.static_animation);
                 return true;
             }
         }

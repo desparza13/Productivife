@@ -35,6 +35,14 @@
                 android:title="Descendant due date"
                 app:showAsAction="never"
                 android:icon="@drawable/ic_down"/>
+            <item android:id="@+id/btnAscendantPriority"
+                android:title="Ascendant priority"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_up"/>
+            <item android:id="@+id/btnDescendantPriority"
+                android:title="Descendant priority"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_down"/>
         </menu>
     </item>
 

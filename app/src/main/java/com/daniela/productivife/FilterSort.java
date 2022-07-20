@@ -11,13 +11,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 public class FilterSort {
-    public static int ASCENDANT = 1;
-    public static int DESCENDANT = 0;
-    public static int LOW_PRIORITY = 0;
-    public static int NORMAL_PRIORITY = 1;
-    public static int HIGH_PRIORITY = 2;
-    public static int ALL_PRIORITY = 3;
+    public static final int ASCENDANT_PRIORITY = 3;
+    public static final int DESCENDANT_PRIORITY = 2;
+    public static final int ASCENDANT = 1;
+    public static final int DESCENDANT = 0;
+    public static final int LOW_PRIORITY = 0;
+    public static final int NORMAL_PRIORITY = 1;
+    public static final int HIGH_PRIORITY = 2;
+    public static final int ALL_PRIORITY = 3;
 
     public static boolean sort (List<ToDoItem> toDoItems, int from, int to, int direction) throws ParseException {
         if (toDoItems.size() <=1){
@@ -28,11 +32,21 @@ public class FilterSort {
             int left = from + 1;
             int right = to;
             while (left <= right){
-                while (left<=to && compareDates(toDoItems.get(pivot), toDoItems.get(left), direction)){ //pivot date > left date
-                    left++;
+                if (direction==ASCENDANT || direction==DESCENDANT){ //Sort by due date in a certain direction
+                    while (left<=to && compareDates(toDoItems.get(pivot), toDoItems.get(left), direction)){ //pivot date > left date
+                        left++;
+                    }
+                    while (right>from && !compareDates(toDoItems.get(pivot), toDoItems.get(right), direction)){ //pivot date < right date
+                        right--;
+                    }
                 }
-                while (right>from && !compareDates(toDoItems.get(pivot), toDoItems.get(right), direction)){ //pivot date < right date
-                    right--;
+                else if (direction==ASCENDANT_PRIORITY || direction==DESCENDANT_PRIORITY){
+                    while (left<=to && comparePriority(toDoItems.get(pivot), toDoItems.get(left), direction)){ //pivot date > left date
+                        left++;
+                    }
+                    while (right>from && !comparePriority(toDoItems.get(pivot), toDoItems.get(right), direction)){ //pivot date < right date
+                        right--;
+                    }
                 }
                 if (left < right){
                     Log.i("Sort", "Swap");
@@ -45,6 +59,7 @@ public class FilterSort {
         }
         return false;
     }
+    //Compare 2 dates (used to sort by due date)
     public static boolean compareDates(ToDoItem toDoItemPivot, ToDoItem toDoItemSide, int direction) throws ParseException {
         SimpleDateFormat sdFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date datePivot = sdFormat.parse(toDoItemPivot.getDueDate());
@@ -57,6 +72,37 @@ public class FilterSort {
         }
         else if (direction == DESCENDANT){
             if (datePivot.compareTo(dateSide)>0){ //pivot date occurs after side date
+                return false;
+            }
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    //Get priority
+    public static int getPriority(ToDoItem toDoItem){
+        if (toDoItem.getPriority().equals("Low")){
+            return 1;
+        }
+        else if (toDoItem.getPriority().equals("Normal")){
+            return 2;
+        }
+        else if (toDoItem.getPriority().equals("High")){
+            return 3;
+        }
+        return 0;
+    }
+    //Compare 2 priorities (used to sort by priority)
+    public static boolean comparePriority(ToDoItem toDoItemPivot, ToDoItem toDoItemSide, int direction) throws ParseException {
+        if (direction==ASCENDANT_PRIORITY){
+            if (getPriority(toDoItemPivot)>getPriority(toDoItemSide)){
+                return true;
+            }
+            return false;
+        }
+        else if (direction == DESCENDANT_PRIORITY){
+            if (getPriority(toDoItemPivot)>getPriority(toDoItemSide)){
                 return false;
             }
             return true;

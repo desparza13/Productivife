@@ -343,6 +343,12 @@ public class ShowListActivity extends AppCompatActivity{
             case R.id.btnDescendant:
                 sort(FilterSort.DESCENDANT);
                 break;
+            case R.id.btnAscendantPriority:
+                sort(FilterSort.ASCENDANT_PRIORITY);
+                break;
+            case R.id.btnDescendantPriority:
+                sort(FilterSort.DESCENDANT_PRIORITY);
+                break;
         }
         return true;
     }

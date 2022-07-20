@@ -1,6 +1,7 @@
 package com.daniela.productivife;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -36,6 +38,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import es.dmoral.toasty.Toasty;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -116,15 +120,15 @@ public class ShowListActivity extends AppCompatActivity{
                 return false;
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public boolean onQueryTextChange(String s) {
                 List<ToDoItem> searched = new ArrayList<>();
-                for (ToDoItem toDoItem : filteredItems){
-                    if(toDoItem.getTitle().toLowerCase().contains(s.toLowerCase())){
-                        searched.add(toDoItem);
-                    }
-                }
+                List<ToDoItem> matchingElements = filteredItems.stream()
+                        .filter(str -> str.getTitle().toLowerCase().trim().contains(s.toLowerCase()))
+                        .collect(Collectors.toList());
 
+                searched = matchingElements;
                 adapter.clear();
                 adapter.addAll(searched);
                 return false;

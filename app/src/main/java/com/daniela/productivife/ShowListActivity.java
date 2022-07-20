@@ -273,6 +273,9 @@ public class ShowListActivity extends AppCompatActivity{
                         @Override
                         public void run() {
                             if (toDoItemDao.getToDoItem(toDoItem.getIdToDoItem())==null){
+                                if (toDoItemDao.getUser(toDoItem.getUserUid())==null){
+                                    toDoItemDao.addUser(toDoItem.getUserUid(), toDoItem.getUser().getEmail());
+                                }
                                 toDoItemDao.addItem(toDoItem.getIdToDoItem(),
                                         toDoItem.getCurrentDateTime(),
                                         toDoItem.getTitle(),

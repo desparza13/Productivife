@@ -3,6 +3,7 @@ package com.daniela.productivife;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -11,6 +12,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoadingActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
+    Class<?> activityClass;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,13 @@ public class LoadingActivity extends AppCompatActivity {
             startActivity(new Intent(LoadingActivity.this, SignUpActivity.class));
             overridePendingTransition(R.anim.zoom_in, R.anim.static_animation);
         } else{
-            startActivity(new Intent(LoadingActivity.this, MainActivity.class));
+            try{
+                SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+                activityClass = Class.forName(sharedPreferences.getString("lastActivity", LoadingActivity.class.getName()));
+            } catch (ClassNotFoundException e) {
+                activityClass = SignUpActivity.class;
+            }
+            startActivity(new Intent(this, activityClass));
             overridePendingTransition(R.anim.zoom_in, R.anim.static_animation);
         }
         finish();

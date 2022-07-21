@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.daniela.productivife.adapters.ToDoItemAdapter;
 import com.daniela.productivife.models.ToDoItem;
 import com.daniela.productivife.models.ToDoItemDao;
 import com.daniela.productivife.models.ToDoItemWithUser;
@@ -38,7 +39,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import es.dmoral.toasty.Toasty;

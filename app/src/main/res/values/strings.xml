@@ -28,6 +28,8 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="edit">edit</string>
+    <string name="back"><![CDATA[<-]]></string>
+    <string name="forward"><![CDATA[->]]></string>
     <!--Add items-->
     <string-array name="priorities">
         <item>Important</item>

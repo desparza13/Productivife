@@ -56,6 +56,7 @@ public class ShowListActivity extends AppCompatActivity{
     private List<ToDoItem> toDoItems;
     private List<ToDoItem> toDoItemsFromDB;
     private List<ToDoItem> filteredItems;
+    private List<ToDoItem> searched;
     private ToDoItemAdapter adapter;
 
     ToDoItemDao toDoItemDao;
@@ -123,12 +124,9 @@ public class ShowListActivity extends AppCompatActivity{
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public boolean onQueryTextChange(String s) {
-                List<ToDoItem> searched = new ArrayList<>();
-                List<ToDoItem> matchingElements = filteredItems.stream()
+                searched = filteredItems.stream()
                         .filter(str -> str.getTitle().toLowerCase().trim().contains(s.toLowerCase()))
                         .collect(Collectors.toList());
-
-                searched = matchingElements;
                 adapter.clear();
                 adapter.addAll(searched);
                 return false;

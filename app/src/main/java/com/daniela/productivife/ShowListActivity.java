@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,12 +44,16 @@ import java.util.stream.Collectors;
 
 import es.dmoral.toasty.Toasty;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
 
 public class ShowListActivity extends AppCompatActivity{
     public static final String TAG = "ShowList";
     private String loggedUser;
     private int appliedFilter = FilterSort.ALL_PRIORITY;
     private RecyclerView rvToDoItems;
+    private KonfettiView confettiView;
     private DatabaseReference databaseReference;
 
     private Dialog dialog;
@@ -78,6 +83,7 @@ public class ShowListActivity extends AppCompatActivity{
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         SearchView searchView = findViewById(R.id.svSearchTitle);
+        confettiView = findViewById(R.id.confettiView);
         rvToDoItems = findViewById(R.id.rvToDoItems);
         rvToDoItems.setHasFixedSize(true); //the recycler view will adapt to the list size
 
@@ -179,6 +185,17 @@ public class ShowListActivity extends AppCompatActivity{
                                 @Override
                                 public void run() {
                                     Toasty.success(ShowListActivity.this, "Item marked as completed").show();
+                                    confettiView.build()
+                                                    .addColors(Color.CYAN, Color.MAGENTA)
+                                                            .setDirection(0.0, 359.0)
+                                                                    .setSpeed(1f, 5f)
+                                                                            .setFadeOutEnabled(true)
+                                                                                    .setTimeToLive(2000L)
+                                                                                            .addShapes(Shape.RECT, Shape.CIRCLE)
+                                                                                                    .addSizes(new Size(12, 5))
+                                                                                                            .setPosition(-50f, confettiView.getWidth() + 50f, -50f, -50f)
+                                                                                                                    .streamFor(300, 2000L);
+
                                     adapter.notifyDataSetChanged();
                                 }
                             });

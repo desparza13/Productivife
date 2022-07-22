@@ -43,6 +43,8 @@ public interface ToDoItemDao {
                                                                                                                                                                                                                                             String place,
                                                                                                                                                                                                                                             String status,
                                                                                                                                                                                                                                             String userUid);
+    @Query("UPDATE ToDoItem SET status='Complete' WHERE idToDoItem=:idToDoItem") void markAsCompleted(String idToDoItem);
+
     @Query("DELETE FROM User WHERE uid=:uid") void deleteUser(String uid);
     @Query("DELETE FROM ToDoItem WHERE idToDoItem=:idToDoItem") void deleteToDoItem(String idToDoItem);
 }

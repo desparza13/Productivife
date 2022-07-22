@@ -41,7 +41,7 @@ public class FilterSort {
                         right--;
                     }
                 }
-                else if (direction==ASCENDANT_PRIORITY || direction==DESCENDANT_PRIORITY){
+                else if (direction==ASCENDANT_PRIORITY || direction==DESCENDANT_PRIORITY){ // sort by priority
                     while (left<=to && comparePriority(toDoItems.get(pivot), toDoItems.get(left), direction)){ //pivot priority > left priority
                         left++;
                     }

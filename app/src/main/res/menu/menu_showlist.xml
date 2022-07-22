@@ -21,6 +21,10 @@
                 android:title="Low priority"
                 app:showAsAction="never"
                 android:icon="@drawable/ic_low_star"/>
+            <item android:id="@+id/btnDateInterval"
+                android:title="Date interval"
+                app:showAsAction="never"
+                android:icon="@drawable/ic_calendar_accent"/>
         </menu>
     </item>
     <item app:showAsAction="always"

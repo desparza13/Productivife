@@ -5,6 +5,8 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_all.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_calendar.xml" value="0.5235" />
+        <entry key="app/src/main/res/drawable/ic_calendarAccent.xml" value="0.1645" />
+        <entry key="app/src/main/res/drawable/ic_calendar_accent.xml" value="0.1645" />
         <entry key="app/src/main/res/drawable/ic_down.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_email.xml" value="0.2365" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.5235" />
@@ -31,6 +33,7 @@
         <entry key="app/src/main/res/layout/activity_to_do_item_details.xml" value="0.67" />
         <entry key="app/src/main/res/layout/activity_to_do_menu.xml" value="0.15121580547112462" />
         <entry key="app/src/main/res/layout/calendar_cell.xml" value="0.9338541666666667" />
+        <entry key="app/src/main/res/layout/dialog_date_interval.xml" value="0.7032501220703126" />
         <entry key="app/src/main/res/layout/dialog_delete.xml" value="0.599432373046875" />
         <entry key="app/src/main/res/layout/dropdown_item.xml" value="0.7667572463768116" />
         <entry key="app/src/main/res/layout/filter_menu.xml" value="0.12273550724637682" />

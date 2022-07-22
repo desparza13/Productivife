@@ -134,7 +134,7 @@ public class ShowListActivity extends AppCompatActivity{
         });
     }
 
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
             return false;
@@ -142,38 +142,61 @@ public class ShowListActivity extends AppCompatActivity{
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            Button btnCancel;
-            Button btnDelete;
-            dialog.setContentView(R.layout.dialog_delete);
-            btnCancel = dialog.findViewById(R.id.btnCancel);
-            btnDelete = dialog.findViewById(R.id.btnDelete);
+            String idToDoItem = filteredItems.get(viewHolder.getBindingAdapterPosition()).getIdToDoItem();
 
-            String idToDoItem = toDoItemsFromDB.get(viewHolder.getBindingAdapterPosition()).getIdToDoItem();
+            switch (direction) {
+                case ItemTouchHelper.LEFT:
+                    Button btnCancel;
+                    Button btnDelete;
+                    dialog.setContentView(R.layout.dialog_delete);
+                    btnCancel = dialog.findViewById(R.id.btnCancel);
+                    btnDelete = dialog.findViewById(R.id.btnDelete);
 
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                    adapter.notifyDataSetChanged();
-                }
-            });
+                    btnCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
 
-            btnDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    deleteToDoItem(idToDoItem);
-                    toDoItems.clear();
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
+                    btnDelete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteToDoItem(idToDoItem);
+                            toDoItems.clear();
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
+                    break;
+                case ItemTouchHelper.RIGHT:
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            toDoItemDao.markAsCompleted(idToDoItem);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toasty.success(ShowListActivity.this, "Item marked as completed").show();
+                                    adapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    });
+
+                    break;
+            }
+
         }
 
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .addBackgroundColor(ContextCompat.getColor(ShowListActivity.this, R.color.colorRed))
-                    .addActionIcon(R.drawable.ic_delete)
+                    .addSwipeLeftBackgroundColor(ContextCompat.getColor(ShowListActivity.this, R.color.colorRed))
+                    .addSwipeRightBackgroundColor(ContextCompat.getColor(ShowListActivity.this, R.color.colorAccent))
+                    .addSwipeLeftActionIcon(R.drawable.ic_delete)
+                    .addSwipeRightActionIcon(R.drawable.ic_check)
                     .create()
                     .decorate();
 
@@ -270,7 +293,6 @@ public class ShowListActivity extends AppCompatActivity{
                 for(DataSnapshot dataSnapshot: snapshot.getChildren())
                 {
                     ToDoItem toDoItem = dataSnapshot.getValue(ToDoItem.class);
-                    //toDoItems.add(toDoItem);
                     AsyncTask.execute(new Runnable() {
                         @Override
                         public void run() {

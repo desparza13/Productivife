@@ -61,7 +61,6 @@ public class ToDoItemAdapter extends RecyclerView.Adapter<ToDoItemAdapter.ViewHo
         TextView tvItemStatus;
         TextView tvItemDueDate;
         TextView tvItemPriority;
-        TextView tvItemPlace;
         TextView tvItemDescription;
 
         public ViewHolder(@NonNull View view) {
@@ -70,7 +69,6 @@ public class ToDoItemAdapter extends RecyclerView.Adapter<ToDoItemAdapter.ViewHo
             tvItemStatus = view.findViewById(R.id.tvItemStatus);
             tvItemDueDate = view.findViewById(R.id.tvItemDueDate);
             tvItemPriority = view.findViewById(R.id.tvItemPriority);
-            tvItemPlace= view.findViewById(R.id.tvItemPlace);
             tvItemDescription = view.findViewById(R.id.tvItemDescription);
             view.setOnClickListener(this);
         }
@@ -98,7 +96,6 @@ public class ToDoItemAdapter extends RecyclerView.Adapter<ToDoItemAdapter.ViewHo
             tvItemStatus.setText(toDoItem.getStatus());
             tvItemDueDate.setText(toDoItem.getDueDate());
             tvItemPriority.setText(toDoItem.getPriority());
-            tvItemPlace.setText(toDoItem.getPlace());
             tvItemDescription.setText(toDoItem.getDescription());
         }
 

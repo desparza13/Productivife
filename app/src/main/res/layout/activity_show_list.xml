@@ -6,6 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ShowListActivity">
+    <ImageView
+        android:id="@+id/ivNoTasks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/no_tasks"
+        android:layout_marginTop="-60dp"
+        android:visibility="gone"
+        />
+    <TextView
+        android:id="@+id/tvNoTasks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/dmsans"
+        android:textSize="30sp"
+        android:text="You have no to-do items at the moment"
+        android:layout_marginTop="-160dp"
+        android:layout_below="@+id/ivNoTasks"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="gone"
+        />
     <nl.dionsegijn.konfetti.KonfettiView
         android:id="@+id/confettiView"
         android:layout_width="match_parent"

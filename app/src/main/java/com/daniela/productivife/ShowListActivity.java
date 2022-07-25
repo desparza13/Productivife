@@ -24,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daniela.productivife.adapters.ToDoItemAdapter;
@@ -64,6 +66,9 @@ public class ShowListActivity extends AppCompatActivity{
     private List<ToDoItem> searched;
     private ToDoItemAdapter adapter;
 
+    private ImageView ivNoTasks;
+    private TextView tvNoTasks;
+
     ToDoItemDao toDoItemDao;
 
     @Override
@@ -83,6 +88,8 @@ public class ShowListActivity extends AppCompatActivity{
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         SearchView searchView = findViewById(R.id.svSearchTitle);
+        ivNoTasks = findViewById(R.id.ivNoTasks);
+        tvNoTasks = findViewById(R.id.tvNoTasks);
         confettiView = findViewById(R.id.confettiView);
         rvToDoItems = findViewById(R.id.rvToDoItems);
         rvToDoItems.setHasFixedSize(true); //the recycler view will adapt to the list size
@@ -110,7 +117,13 @@ public class ShowListActivity extends AppCompatActivity{
                 filterList(appliedFilter);
                 Log.i(TAG, filteredItems.toString());
                 adapter.clear();
-                adapter.addAll(filteredItems);
+                if (filteredItems.size()==0){
+                    ivNoTasks.setVisibility(View.VISIBLE);
+                    tvNoTasks.setVisibility(View.VISIBLE);
+                }
+                else{
+                    adapter.addAll(filteredItems);
+                }
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -187,21 +200,20 @@ public class ShowListActivity extends AppCompatActivity{
                                     Toasty.success(ShowListActivity.this, "Item marked as completed").show();
                                     confettiView.build()
                                                     .addColors(Color.CYAN, Color.MAGENTA)
-                                                            .setDirection(0.0, 359.0)
-                                                                    .setSpeed(1f, 5f)
-                                                                            .setFadeOutEnabled(true)
-                                                                                    .setTimeToLive(2000L)
-                                                                                            .addShapes(Shape.RECT, Shape.CIRCLE)
-                                                                                                    .addSizes(new Size(12, 5))
-                                                                                                            .setPosition(-50f, confettiView.getWidth() + 50f, -50f, -50f)
-                                                                                                                    .streamFor(300, 2000L);
-
-                                    adapter.notifyDataSetChanged();
+                                                    .setDirection(0.0, 359.0)
+                                                    .setSpeed(1f, 5f)
+                                                    .setFadeOutEnabled(true)
+                                                    .setTimeToLive(2000L)
+                                                    .addShapes(Shape.RECT, Shape.CIRCLE)
+                                                    .addSizes(new Size(12, 5))
+                                                    .setPosition(-50f, confettiView.getWidth() + 50f, -50f, -50f)
+                                                    .streamFor(300, 2000L);
                                 }
                             });
                         }
                     });
-
+                    TextView tvStatus = viewHolder.itemView.findViewById(R.id.tvItemStatus);
+                    tvStatus.setText("COMPLETE");
                     break;
             }
 
@@ -292,7 +304,12 @@ public class ShowListActivity extends AppCompatActivity{
         filterList(appliedFilter);
         Log.i(TAG, filteredItems.toString());
         adapter.clear();
-        adapter.addAll(filteredItems);
+        if(filteredItems.size()==0){
+            ivNoTasks.setVisibility(View.VISIBLE);
+            tvNoTasks.setVisibility(View.VISIBLE);
+        }else{
+            adapter.addAll(filteredItems);
+        }
     }
     @Override
     protected void onPause() {

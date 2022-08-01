@@ -43,6 +43,14 @@
         android:id="@+id/rvToDoItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="50dp"
         android:layout_below="@+id/svSearchTitle">
     </androidx.recyclerview.widget.RecyclerView>
+    <Button
+        android:id="@+id/btnDeleteCompleted"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rvToDoItems"
+        android:layout_marginTop="-50dp"
+        android:text="Delete all completed elements"/>
 </RelativeLayout>

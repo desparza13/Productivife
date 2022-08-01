@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
+import com.daniela.productivife.models.ToDoItemDao;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -80,6 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
     private String email ="";
     private String password = "";
     private String confirmPassword = "";
+    private ToDoItemDao toDoItemDao;
 
     private CallbackManager callbackManager;
     private static final String EMAIL = "email";
@@ -89,6 +92,8 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         TypefaceProvider.registerDefaultIconSets();
         setContentView(R.layout.activity_sign_up);
+
+        toDoItemDao = ((BackupDatabaseApplication) getApplicationContext()).getBackupDatabase().toDoItemDao();
 
         callbackManager = CallbackManager.Factory.create();
         configureToasty();
@@ -263,6 +268,13 @@ public class SignUpActivity extends AppCompatActivity {
         data.put("email", email);
         data.put("name", name);
         data.put("password", password);
+        //Register in local database
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                toDoItemDao.addUser(uid, email);
+            }
+        });
 
         //Register in database
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");

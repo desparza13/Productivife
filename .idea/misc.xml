@@ -25,10 +25,10 @@
         <entry key="app/src/main/res/drawable/wave.xml" value="0.2365" />
         <entry key="app/src/main/res/layout/activity_add_item.xml" value="0.18181818181818182" />
         <entry key="app/src/main/res/layout/activity_edit_to_do_item.xml" value="0.5083373138870018" />
-        <entry key="app/src/main/res/layout/activity_loading.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/activity_loading.xml" value="0.297662353515625" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.2463768115942029" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4630192502532928" />
-        <entry key="app/src/main/res/layout/activity_show_list.xml" value="0.6035171508789063" />
+        <entry key="app/src/main/res/layout/activity_show_list.xml" value="0.2514057321601345" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.26581573486328114" />
         <entry key="app/src/main/res/layout/activity_to_do_item_details.xml" value="0.67" />
         <entry key="app/src/main/res/layout/activity_to_do_menu.xml" value="0.15121580547112462" />

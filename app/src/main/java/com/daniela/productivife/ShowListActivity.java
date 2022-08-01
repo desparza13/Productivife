@@ -68,6 +68,7 @@ public class ShowListActivity extends AppCompatActivity{
 
     private ImageView ivNoTasks;
     private TextView tvNoTasks;
+    private Button btnDeleteCompleted;
 
     ToDoItemDao toDoItemDao;
 
@@ -90,6 +91,7 @@ public class ShowListActivity extends AppCompatActivity{
         SearchView searchView = findViewById(R.id.svSearchTitle);
         ivNoTasks = findViewById(R.id.ivNoTasks);
         tvNoTasks = findViewById(R.id.tvNoTasks);
+        btnDeleteCompleted = findViewById(R.id.btnDeleteCompleted);
         confettiView = findViewById(R.id.confettiView);
         rvToDoItems = findViewById(R.id.rvToDoItems);
         rvToDoItems.setHasFixedSize(true); //the recycler view will adapt to the list size
@@ -112,8 +114,8 @@ public class ShowListActivity extends AppCompatActivity{
             @Override
             public void run() {
                 Log.i(TAG, "Showing to-do items from SQL database");
-                List<ToDoItemWithUser> toDoItemWithUsers = toDoItemDao.toDoItems();
-                toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
+                toDoItemsFromDB = toDoItemDao.toDoItem();
+                //toDoItemsFromDB = ToDoItemWithUser.getToDoItemsList(toDoItemWithUsers);
                 filterList(appliedFilter);
                 Log.i(TAG, filteredItems.toString());
                 adapter.clear();
@@ -151,7 +153,21 @@ public class ShowListActivity extends AppCompatActivity{
                 return false;
             }
         });
+
+        btnDeleteCompleted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (ToDoItem toDoItem : toDoItemsFromDB){
+                    Log.i(TAG, toDoItem.getTitle()+toDoItem.getStatus());
+                    if (toDoItem.getStatus().equals("Complete")){
+                        deleteToDoItem(toDoItem.getIdToDoItem());
+                    }
+                }
+                startActivity(new Intent(ShowListActivity.this, ShowListActivity.class));
+            }
+        });
     }
+
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
@@ -331,9 +347,6 @@ public class ShowListActivity extends AppCompatActivity{
                         @Override
                         public void run() {
                             if (toDoItemDao.getToDoItem(toDoItem.getIdToDoItem())==null){
-                                if (toDoItemDao.getUser(toDoItem.getUserUid())==null){
-                                    toDoItemDao.addUser(toDoItem.getUserUid(), toDoItem.getUser().getEmail());
-                                }
                                 toDoItemDao.addItem(toDoItem.getIdToDoItem(),
                                         toDoItem.getCurrentDateTime(),
                                         toDoItem.getTitle(),

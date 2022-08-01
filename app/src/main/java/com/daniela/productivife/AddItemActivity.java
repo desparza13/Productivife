@@ -208,9 +208,6 @@ public class AddItemActivity extends AppCompatActivity {
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (toDoItemDao.getUser(toDoItem.getUserUid())!=null){
-                        toDoItemDao.addUser(toDoItem.getUser().getUid(), toDoItem.getUser().getEmail());
-                    }
                     toDoItemDao.addItem(toDoItem.getIdToDoItem(),
                             toDoItem.getCurrentDateTime(),
                             toDoItem.getTitle(),
